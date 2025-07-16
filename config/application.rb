@@ -35,26 +35,26 @@ module Travalytics
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-    
+
     # CORS configuration for analytics tracking
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         # Allow all origins to send tracking data
-        origins '*'
-        
+        origins "*"
+
         # Only allow POST to the tracking endpoint
-        resource '/track/*/events',
+        resource "/track/*/events",
           headers: :any,
-          methods: [:post],
+          methods: [ :post ],
           credentials: false
       end
-      
+
       # Separate configuration for the analytics.js file
       allow do
-        origins '*'
-        resource '/analytics.js',
+        origins "*"
+        resource "/analytics.js",
           headers: :any,
-          methods: [:get],
+          methods: [ :get ],
           credentials: false
       end
     end

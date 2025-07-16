@@ -4,7 +4,7 @@ class DashboardsController < ApplicationController
 
   def show
     @sites = current_user.sites
-    
+
     if @site
       @total_events = @site.events.humans_only.count
       @page_views = @site.events.humans_only.page_views.count
@@ -34,9 +34,9 @@ class DashboardsController < ApplicationController
       @events = []
     end
   end
-  
+
   private
-  
+
   def set_site
     @site = if params[:site_id]
       current_user.sites.find_by(id: params[:site_id])
@@ -44,11 +44,11 @@ class DashboardsController < ApplicationController
       current_user.sites.first
     end
   end
-  
+
   def filter_start_date
     params[:start_date]&.to_date || 7.days.ago
   end
-  
+
   def filter_end_date
     params[:end_date]&.to_date || Date.current
   end

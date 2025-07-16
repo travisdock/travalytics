@@ -7,7 +7,7 @@ class EventTracker
   def track(event_name, properties = {})
     # Enrich properties with request data if available
     enriched_properties = properties.merge(extract_request_data)
-    
+
     Event.create!(
       site: @site,
       event_name: event_name,
@@ -24,7 +24,7 @@ class EventTracker
 
   def extract_request_data
     return {} unless @request
-    
+
     {
       timestamp: Time.current.iso8601,
       user_agent: @request.user_agent,
@@ -35,6 +35,6 @@ class EventTracker
   def anonymize_ip(ip)
     return nil unless ip
     # Simple IP anonymization - zero out last octet
-    ip.split('.')[0..2].join('.') + '.0'
+    ip.split(".")[0..2].join(".") + ".0"
   end
 end

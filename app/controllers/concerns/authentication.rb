@@ -16,11 +16,11 @@ module Authentication
     def authenticated?
       resume_session
     end
-    
+
     def signed_in?
       authenticated?
     end
-    
+
     def current_user
       Current.session&.user
     end

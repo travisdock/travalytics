@@ -1,6 +1,6 @@
 class Event < ApplicationRecord
   belongs_to :site
-  
+
   validates :event_name, presence: true
 
   scope :by_date_range, ->(start_date, end_date) { where(created_at: start_date..end_date) }
@@ -8,22 +8,22 @@ class Event < ApplicationRecord
   scope :by_page_url, ->(url) { where(page_url: url) }
   scope :by_site, ->(site) { where(site: site) }
   scope :recent, -> { order(created_at: :desc) }
-  
+
   # Helper scopes for common event types
-  scope :page_views, -> { where(event_name: 'page_view') }
-  scope :clicks, -> { where(event_name: ['button_click', 'link_click']) }
-  scope :form_submissions, -> { where(event_name: 'form_submit') }
-  
+  scope :page_views, -> { where(event_name: "page_view") }
+  scope :clicks, -> { where(event_name: [ "button_click", "link_click" ]) }
+  scope :form_submissions, -> { where(event_name: "form_submit") }
+
   # Bot filtering scopes
   scope :humans_only, -> { where(is_bot: false) }
   scope :bots_only, -> { where(is_bot: true) }
-  
+
   # Helper methods for extracting common properties
   def page_path
-    properties&.dig('path')
+    properties&.dig("path")
   end
-  
+
   def page_title
-    properties&.dig('title')
+    properties&.dig("title")
   end
 end

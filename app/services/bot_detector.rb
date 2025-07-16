@@ -19,7 +19,7 @@ class BotDetector
 
   def self.bot?(user_agent)
     return true if user_agent.blank?
-    
+
     BOT_PATTERNS.any? { |pattern| user_agent.match?(pattern) }
   end
 end
