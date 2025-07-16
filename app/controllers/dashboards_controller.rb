@@ -1,4 +1,4 @@
-class DashboardController < ApplicationController
+class DashboardsController < ApplicationController
   before_action :require_authentication
   before_action :set_site
 
@@ -25,17 +25,21 @@ class DashboardController < ApplicationController
   end
 
   def events
-    @events = @site.events.humans_only
-                   .by_date_range(filter_start_date, filter_end_date)
-                   .recent
-                   .page(params[:page])
+    if @site
+      @events = @site.events.humans_only
+                     .by_date_range(filter_start_date, filter_end_date)
+                     .recent
+      # Note: pagination would need to be added with a gem like kaminari or pagy
+    else
+      @events = []
+    end
   end
   
   private
   
   def set_site
     @site = if params[:site_id]
-      current_user.sites.find(params[:site_id])
+      current_user.sites.find_by(id: params[:site_id])
     else
       current_user.sites.first
     end

@@ -32,6 +32,9 @@ class EventsController < ApplicationController
     return if origin.blank?
     
     origin_domain = URI.parse(origin).host
+    # Allow localhost for testing
+    return if origin_domain == 'localhost' || origin_domain == '127.0.0.1'
+    
     unless origin_domain == @site.domain || origin_domain.end_with?(".#{@site.domain}")
       render json: { status: 'error', message: 'Origin not allowed' }, status: 403
     end
