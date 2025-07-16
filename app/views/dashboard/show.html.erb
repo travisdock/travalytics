@@ -1,0 +1,118 @@
+<div class="container">
+  <% if @sites.empty? %>
+    <div class="empty-state">
+      <h2>Welcome to Travalytics</h2>
+      <p>Get started by adding your first website to track</p>
+      <%= link_to "Add Your First Site", new_site_path, class: "btn btn-primary", style: "margin-top: 1rem;" %>
+    </div>
+  <% elsif @site.nil? %>
+    <div class="empty-state">
+      <p>No site data available</p>
+      <%= link_to "View Sites", sites_path, class: "btn btn-light", style: "margin-top: 1rem;" %>
+    </div>
+  <% else %>
+    <div class="page-header">
+      <div>
+        <h1 class="page-title"><%= @site.name %></h1>
+        <p class="page-subtitle"><%= @site.domain %></p>
+      </div>
+      <% if @sites.count > 1 %>
+        <div>
+          <select onchange="window.location.href='<%= dashboard_path %>?site_id=' + this.value" class="select">
+            <% @sites.each do |site| %>
+              <option value="<%= site.id %>" <%= 'selected' if site.id == @site.id %>><%= site.name %></option>
+            <% end %>
+          </select>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="card">
+        <div class="card-body">
+          <dt class="card-title">Total Events</dt>
+          <dd class="card-value"><%= number_with_delimiter(@total_events) %></dd>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <dt class="card-title">Page Views</dt>
+          <dd class="card-value"><%= number_with_delimiter(@page_views) %></dd>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <dt class="card-title">Bot Traffic</dt>
+          <dd class="card-value"><%= number_with_delimiter(@bot_traffic) %></dd>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <dt class="card-title">Human Traffic %</dt>
+          <dd class="card-value">
+            <% total = @total_events + @bot_traffic %>
+            <%= total > 0 ? number_to_percentage((@total_events.to_f / total) * 100, precision: 1) : "0%" %>
+          </dd>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popular Pages -->
+    <div class="section">
+      <h2 class="section-title">Popular Pages</h2>
+      <div class="card">
+        <% if @popular_pages.any? %>
+          <ul class="list">
+            <% @popular_pages.each do |path, count| %>
+              <li class="list-item">
+                <div style="flex: 1;">
+                  <p style="margin: 0; font-weight: 500;"><%= path || "/" %></p>
+                </div>
+                <div>
+                  <p style="margin: 0; color: #6b7280; font-size: 0.875rem;"><%= number_with_delimiter(count) %> views</p>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="empty-state">
+            No page view data yet
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Recent Events -->
+    <div class="section">
+      <h2 class="section-title">Recent Events</h2>
+      <div class="card">
+        <% if @recent_events.any? %>
+          <ul class="list">
+            <% @recent_events.limit(10).each do |event| %>
+              <li class="list-item">
+                <div>
+                  <p style="margin: 0; font-weight: 500;"><%= event.event_name.humanize %></p>
+                  <p style="margin: 0.25rem 0 0 0; color: #6b7280; font-size: 0.875rem;"><%= event.page_path || event.page_url %></p>
+                </div>
+                <div style="font-size: 0.875rem; color: #6b7280;">
+                  <%= time_ago_in_words(event.created_at) %> ago
+                </div>
+              </li>
+            <% end %>
+          </ul>
+          <div style="background-color: #f9fafb; padding: 0.75rem 1.5rem; border-top: 1px solid #e5e7eb;">
+            <%= link_to "View All Events", events_dashboard_path(site_id: @site.id), style: "color: #6366f1; text-decoration: none; font-size: 0.875rem; font-weight: 500;" %>
+          </div>
+        <% else %>
+          <div class="empty-state">
+            No events tracked yet
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
