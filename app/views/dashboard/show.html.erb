@@ -1,0 +1,120 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <% if @sites.empty? %>
+    <div class="text-center py-12">
+      <h2 class="text-2xl font-semibold text-gray-900">Welcome to Travalytics</h2>
+      <p class="mt-2 text-gray-600">Get started by adding your first website to track</p>
+      <%= link_to "Add Your First Site", new_site_path, class: "mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    </div>
+  <% elsif @site.nil? %>
+    <div class="text-center py-12">
+      <p class="text-gray-600">No site data available</p>
+      <%= link_to "View Sites", sites_path, class: "mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    </div>
+  <% else %>
+    <div class="sm:flex sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-3xl font-semibold text-gray-900"><%= @site.name %></h1>
+        <p class="mt-1 text-sm text-gray-500"><%= @site.domain %></p>
+      </div>
+      <% if @sites.count > 1 %>
+        <div class="mt-4 sm:mt-0">
+          <select onchange="window.location.href='<%= dashboard_path %>?site_id=' + this.value" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+            <% @sites.each do |site| %>
+              <option value="<%= site.id %>" <%= 'selected' if site.id == @site.id %>><%= site.name %></option>
+            <% end %>
+          </select>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <dt class="text-sm font-medium text-gray-500 truncate">Total Events</dt>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= number_with_delimiter(@total_events) %></dd>
+        </div>
+      </div>
+
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <dt class="text-sm font-medium text-gray-500 truncate">Page Views</dt>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= number_with_delimiter(@page_views) %></dd>
+        </div>
+      </div>
+
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <dt class="text-sm font-medium text-gray-500 truncate">Bot Traffic</dt>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900"><%= number_with_delimiter(@bot_traffic) %></dd>
+        </div>
+      </div>
+
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <dt class="text-sm font-medium text-gray-500 truncate">Human Traffic %</dt>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900">
+            <% total = @total_events + @bot_traffic %>
+            <%= total > 0 ? number_to_percentage((@total_events.to_f / total) * 100, precision: 1) : "0%" %>
+          </dd>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popular Pages -->
+    <div class="mt-8">
+      <h2 class="text-lg font-medium text-gray-900 mb-4">Popular Pages</h2>
+      <div class="bg-white shadow overflow-hidden sm:rounded-md">
+        <% if @popular_pages.any? %>
+          <ul class="divide-y divide-gray-200">
+            <% @popular_pages.each do |path, count| %>
+              <li class="px-6 py-4 flex items-center justify-between">
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-900"><%= path || "/" %></p>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm text-gray-500"><%= number_with_delimiter(count) %> views</p>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="px-6 py-4 text-center text-gray-500">
+            No page view data yet
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Recent Events -->
+    <div class="mt-8">
+      <h2 class="text-lg font-medium text-gray-900 mb-4">Recent Events</h2>
+      <div class="bg-white shadow overflow-hidden sm:rounded-md">
+        <% if @recent_events.any? %>
+          <ul class="divide-y divide-gray-200">
+            <% @recent_events.limit(10).each do |event| %>
+              <li class="px-6 py-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-medium text-gray-900"><%= event.event_name.humanize %></p>
+                    <p class="text-sm text-gray-500"><%= event.page_path || event.page_url %></p>
+                  </div>
+                  <div class="text-sm text-gray-500">
+                    <%= time_ago_in_words(event.created_at) %> ago
+                  </div>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+          <div class="bg-gray-50 px-6 py-3">
+            <%= link_to "View All Events", events_dashboard_path(site_id: @site.id), class: "text-sm font-medium text-indigo-600 hover:text-indigo-500" %>
+          </div>
+        <% else %>
+          <div class="px-6 py-4 text-center text-gray-500">
+            No events tracked yet
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
