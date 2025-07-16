@@ -35,3 +35,8 @@
 
 *.swp
 vendor/bundle/
+
+# ClaudeOnRails
+.claude-on-rails/sessions/
+.claude-swarm/
+claude-swarm.log
