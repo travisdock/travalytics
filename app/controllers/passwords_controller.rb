@@ -6,9 +6,9 @@ class PasswordsController < ApplicationController
   end
 
   def create
-    #if user = User.find_by(email_address: params[:email_address])
+    # if user = User.find_by(email_address: params[:email_address])
     #  PasswordsMailer.reset(user).deliver_later
-    #end
+    # end
 
     redirect_to new_session_path, notice: "Please contact an administrator to change your password"
   end
