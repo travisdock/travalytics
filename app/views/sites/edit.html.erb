@@ -39,6 +39,7 @@
   const script = document.createElement('script');
   script.src = '<%= request.base_url %>/analytics.js';
   script.setAttribute('data-tracking-id', '<%= @site.tracking_id %>');
+  script.setAttribute('data-endpoint', '<%= request.base_url %>');
   script.async = true;
   document.head.appendChild(script);
 })();

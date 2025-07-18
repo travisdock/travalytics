@@ -21,7 +21,7 @@ class PublicController < ApplicationController
         class Analytics {
           constructor(trackingId) {
             this.trackingId = trackingId;
-            this.endpoint = `${window.location.protocol}//${window.location.host}/track/${trackingId}/events`;
+            this.endpoint = null; // Will be set during initialization
             this.pageStartTime = Date.now();
 
             // Auto-track page views
@@ -73,9 +73,12 @@ class PublicController < ApplicationController
         // Auto-initialize if tracking ID is provided
         const script = document.currentScript;
         const trackingId = script.getAttribute('data-tracking-id');
+        const endpoint = script.getAttribute('data-endpoint') || 'https://travserve.net';
 
         if (trackingId) {
-          window.TravalyticsAnalytics = new Analytics(trackingId);
+          const analytics = new Analytics(trackingId);
+          analytics.endpoint = `${endpoint}/track/${trackingId}/events`;
+          window.TravalyticsAnalytics = analytics;
         } else {
           console.error('Travalytics: No tracking ID provided');
         }
