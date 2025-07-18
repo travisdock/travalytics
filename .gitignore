@@ -40,3 +40,4 @@ vendor/bundle/
 .claude-on-rails/sessions/
 .claude-swarm/
 claude-swarm.log
+.env
