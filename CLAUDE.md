@@ -1,39 +1,49 @@
 ## ClaudeOnRails Configuration
 
-You are working on Travalytics, a Rails application. Review the ClaudeOnRails context file at @.claude-on-rails/context.md
+You are working on Travalytics, a Rails application that does very simple web analytics like tracking page views and custom events. Review the ClaudeOnRails context file at @.claude-on-rails/context.md
 
-## Important: Styling Guidelines
+## Key Features
+
+- Users can track events for multiple sites
+- Convenient javascript snippet on the site edit page to add to copy and paste
+
+## Styling Guidelines
 
 **DO NOT USE TAILWIND CSS** - This project does not use Tailwind. Use regular CSS classes and Rails view helpers for styling.
 
 ## Authentication Flow
 
-The application uses a custom authentication system (not Devise):
+The application uses a custom session-based authentication system (not Devise).
 
-### Key Components:
-- **Authentication Module** (`app/controllers/concerns/authentication.rb`): Provides authentication helpers
-  - `authenticate`: Requires login, redirects to login page if not authenticated
-  - `authenticated?`: Checks if user is logged in
-  - `current_user`: Returns the current authenticated user
-  - `start_new_session_for(user)`: Creates a new session for a user
-  - `after_authentication_url`: Determines where to redirect after login (stored URL or root)
+### Key Files:
+- `app/controllers/concerns/authentication.rb` - Core authentication logic
+- `app/controllers/sessions_controller.rb` - Login/logout
+- `app/controllers/users_controller.rb` - User registration
+- `app/models/user.rb` - User model with `has_secure_password`
+- `app/models/session.rb` - Session tracking
 
-### Controllers:
-- **SessionsController** (`app/controllers/sessions_controller.rb`): Handles login/logout
-  - `new`: Login form
-  - `create`: Authenticates user and redirects to `after_authentication_url`
-  - `destroy`: Logs out user
+### Overview:
+- Users authenticate with email/password
+- Sessions are tracked in the database and cookies
+- Protected routes require authentication via `before_action :require_authentication`
+- After login/signup, users are redirected to their intended destination or dashboard
 
-- **UsersController** (`app/controllers/users_controller.rb`): Handles user registration
-  - `new`: Signup form
-  - `create`: Creates user, starts session, redirects to `after_authentication_url`
+## Your role
 
-### Session Management:
-- Sessions are stored in cookies using Rails' encrypted session store
-- Session key: `:user_id`
-- Users are automatically logged in after signup via `start_new_session_for`
+Your role is to write code. You do NOT have access to the running app, so you cannot test the code. You MUST rely on me, the user, to test the code.
 
-### Redirect Flow:
-- Unauthenticated users trying to access protected pages are redirected to login
-- After login/signup, users go to their original destination or dashboard (`root_url`)
-- The `store_location` helper saves the intended destination before redirecting to login
+If I report a bug in your code, after you fix it, you should pause and ask me to verify that the bug is fixed.
+
+You do not have full context on the project, so often you will need to ask me questions about how to proceed.
+
+Don't be shy to ask questions -- I'm here to help you!
+
+If I send you a URL, you MUST immediately fetch its contents and read it carefully, before you do anything else.
+
+## Workflow Guidelines
+
+- This project uses rubocop. Please run rubocop after you finish making code changes and attempt to resolve offenses
+- Do not attempt to run the application or open a console. Ask me to help if you need to test something or know an output of something
+- Keep things as simple as possible. Stupidly simple. We can always increase complexity later.
+- Attempt to do most things without adding dependencies. If you feel that adding a dependency is the absolute best solution to a problem then ask me first so I can approve.
+
