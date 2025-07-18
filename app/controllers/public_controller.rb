@@ -37,6 +37,7 @@ class PublicController < ApplicationController
 
           trackPageView() {
             this.track('page_view', {
+              url: window.location.href,
               path: window.location.pathname,
               title: document.title,
               referrer: document.referrer,
@@ -47,6 +48,7 @@ class PublicController < ApplicationController
           trackPageDuration() {
             const duration = Date.now() - this.pageStartTime;
             this.track('page_duration', {
+              url: window.location.href,
               path: window.location.pathname,
               duration_ms: duration
             });

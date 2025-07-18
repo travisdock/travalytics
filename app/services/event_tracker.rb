@@ -12,8 +12,8 @@ class EventTracker
       site: @site,
       event_name: event_name,
       properties: enriched_properties,
-      page_url: @request&.url,
-      referrer: @request&.referrer,
+      page_url: properties[:url] || properties["url"],
+      referrer: properties[:referrer] || properties["referrer"] || @request&.referrer,
       user_agent: @request&.user_agent,
       ip_address: anonymize_ip(@request&.remote_ip),
       is_bot: BotDetector.bot?(@request&.user_agent)
