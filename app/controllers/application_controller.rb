@@ -2,12 +2,4 @@ class ApplicationController < ActionController::Base
   include Authentication
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
-
-  private
-
-  # Override from Authentication module to add timezone setting
-  def require_authentication
-    Time.zone = current_user.time_zone if current_user&.time_zone.present?
-    super
-  end
 end

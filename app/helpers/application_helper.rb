@@ -1,13 +1,13 @@
 module ApplicationHelper
-  def format_datetime(datetime)
+  def format_datetime(datetime, timezone = nil)
     return "-" if datetime.nil?
-    # Convert to the current timezone
-    datetime.in_time_zone.strftime("%b %d, %Y %l:%M %p %Z")
+    timezone ||= current_user&.time_zone || "UTC"
+    datetime.in_time_zone(timezone).strftime("%b %d, %Y %l:%M %p %Z")
   end
 
-  def format_date(date)
+  def format_date(date, timezone = nil)
     return "-" if date.nil?
-    # Convert to the current timezone
-    date.in_time_zone.strftime("%B %d, %Y")
+    timezone ||= current_user&.time_zone || "UTC"
+    date.in_time_zone(timezone).strftime("%B %d, %Y")
   end
 end

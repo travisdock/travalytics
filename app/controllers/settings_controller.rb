@@ -9,8 +9,6 @@ class SettingsController < ApplicationController
     @user = current_user
 
     if @user.update(user_params)
-      # Update the timezone for the current request
-      Time.zone = @user.time_zone if @user.time_zone.present?
       redirect_to edit_settings_path, notice: "Settings updated successfully"
     else
       render :edit, status: :unprocessable_entity
