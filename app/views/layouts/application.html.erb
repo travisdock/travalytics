@@ -38,6 +38,7 @@
           </div>
           <div class="nav-user">
             <span class="nav-user-email"><%= current_user.email_address %></span>
+            <%= link_to "Settings", edit_settings_path, class: "nav-link" %>
             <%= button_to "Sign Out", session_path, method: :delete, class: "nav-sign-out" %>
           </div>
         </div>

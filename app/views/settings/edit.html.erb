@@ -1,0 +1,119 @@
+<div class="container container-narrow">
+  <h1 class="page-title" style="margin-bottom: 2rem;">Account Settings</h1>
+
+  <% if notice.present? %>
+    <div class="alert alert-success" style="margin-bottom: 2rem;">
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <!-- Timezone Settings -->
+  <div class="card" style="margin-bottom: 2rem;">
+    <div class="card-header">
+      <h2>Timezone</h2>
+    </div>
+    <div class="card-body">
+      <%= form_with model: @user, url: settings_path, method: :patch do |form| %>
+        <div class="form-group">
+          <%= form.label :time_zone, "Your timezone", class: "form-label" %>
+          <%= form.time_zone_select :time_zone, 
+              ActiveSupport::TimeZone.all,
+              { selected: @user.time_zone },
+              { class: "form-input" } %>
+          <p class="form-hint">All times will be displayed in this timezone</p>
+        </div>
+
+        <div class="form-actions">
+          <%= form.submit "Update Timezone", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Password Change -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Change Password</h2>
+    </div>
+    <div class="card-body">
+      <%= form_with model: @user, url: update_password_settings_path, method: :patch do |form| %>
+        <% if @user.errors[:current_password].any? %>
+          <div class="alert alert-error" style="margin-bottom: 1rem;">
+            <%= @user.errors[:current_password].first %>
+          </div>
+        <% end %>
+        
+        <% if @user.errors[:password].any? %>
+          <div class="alert alert-error" style="margin-bottom: 1rem;">
+            <%= @user.errors[:password].first %>
+          </div>
+        <% end %>
+
+        <div class="form-group">
+          <%= label_tag :current_password, "Current Password", class: "form-label" %>
+          <%= password_field_tag :current_password, nil, class: "form-input", required: true %>
+        </div>
+
+        <div class="form-group">
+          <%= form.label :password, "New Password", class: "form-label" %>
+          <%= form.password_field :password, class: "form-input", required: true, maxlength: 72 %>
+        </div>
+
+        <div class="form-group">
+          <%= form.label :password_confirmation, "Confirm New Password", class: "form-label" %>
+          <%= form.password_field :password_confirmation, class: "form-input", required: true, maxlength: 72 %>
+        </div>
+
+        <div class="form-actions">
+          <%= form.submit "Update Password", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div style="margin-top: 2rem;">
+    <%= link_to "← Back to Dashboard", dashboard_path, class: "btn btn-outline" %>
+  </div>
+</div>
+
+<style>
+  .card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .card-header {
+    background: #f8f9fa;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .card-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .alert {
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  
+  .alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+</style>

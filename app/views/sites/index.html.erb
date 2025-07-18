@@ -27,7 +27,7 @@
               <td style="font-weight: 500;"><%= site.name %></td>
               <td><%= site.domain %></td>
               <td><code class="code"><%= site.tracking_id %></code></td>
-              <td><%= site.created_at.strftime("%B %d, %Y") %></td>
+              <td><%= format_date(site.created_at) %></td>
               <td style="text-align: right;">
                 <%= link_to "View", site, class: "btn-link", style: "margin-right: 1rem;" %>
                 <%= link_to "Edit", edit_site_path(site), class: "btn-link", style: "margin-right: 1rem;" %>

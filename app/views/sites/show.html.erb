@@ -17,7 +17,7 @@
         </div>
         <div class="info-group">
           <dt>Created</dt>
-          <dd><%= @site.created_at.strftime("%B %d, %Y") %></dd>
+          <dd><%= format_date(@site.created_at) %></dd>
         </div>
       </dl>
     </div>
@@ -76,7 +76,7 @@
                   <% end %>
                 </td>
                 <td>
-                  <%= event.created_at.strftime("%b %d, %Y %l:%M %p") %>
+                  <%= format_datetime(event.created_at) %>
                 </td>
               </tr>
             <% end %>

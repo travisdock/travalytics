@@ -11,6 +11,11 @@ Rails.application.routes.draw do
   # Site management
   resources :sites
 
+  # User settings
+  resource :settings, only: [ :edit, :update ] do
+    patch :update_password
+  end
+
   # Dashboard routes
   resource :dashboard, only: [ :show ] do
     member do

@@ -59,7 +59,7 @@
                 <% end %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <%= event.created_at.strftime("%b %d, %Y %l:%M %p") %>
+                <%= format_datetime(event.created_at) %>
               </td>
             </tr>
           <% end %>
