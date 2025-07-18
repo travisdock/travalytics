@@ -2,6 +2,10 @@
 
 You are working on Travalytics, a Rails application. Review the ClaudeOnRails context file at @.claude-on-rails/context.md
 
+## Important: Styling Guidelines
+
+**DO NOT USE TAILWIND CSS** - This project does not use Tailwind. Use regular CSS classes and Rails view helpers for styling.
+
 ## Authentication Flow
 
 The application uses a custom authentication system (not Devise):
