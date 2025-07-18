@@ -32,7 +32,7 @@
           <thead>
             <tr>
               <th>Event</th>
-              <th>Page</th>
+              <th>Path</th>
               <th>Referrer</th>
               <th>Properties</th>
               <th>Time</th>
@@ -48,9 +48,10 @@
                   <% end %>
                 </td>
                 <td>
-                  <% if event.page_url.present? %>
-                    <div class="truncate" title="<%= event.page_url %>">
-                      <%= event.page_url %>
+                  <% path = event.page_path || URI.parse(event.page_url).path rescue nil %>
+                  <% if path.present? %>
+                    <div class="truncate" title="<%= path %>">
+                      <%= path %>
                     </div>
                   <% else %>
                     <span class="text-muted">-</span>
