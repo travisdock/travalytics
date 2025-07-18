@@ -23,7 +23,9 @@ class PublicController < ApplicationController
             this.trackingId = trackingId;
             this.endpoint = null; // Will be set during initialization
             this.pageStartTime = Date.now();
+          }
 
+          init() {
             // Auto-track page views
             this.trackPageView();
 
@@ -78,6 +80,7 @@ class PublicController < ApplicationController
         if (trackingId) {
           const analytics = new Analytics(trackingId);
           analytics.endpoint = `${endpoint}/track/${trackingId}/events`;
+          analytics.init();
           window.TravalyticsAnalytics = analytics;
         } else {
           console.error('Travalytics: No tracking ID provided');
