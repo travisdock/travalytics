@@ -21,7 +21,7 @@ class SitesController < ApplicationController
   end
 
   def show
-    redirect_to dashboard_path(site_id: @site.id)
+    @events = @site.events.order(created_at: :desc).limit(100)
   end
 
   def edit

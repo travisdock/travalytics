@@ -1,0 +1,99 @@
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title"><%= @site.name %></h1>
+    <p class="page-subtitle"><%= @site.domain %></p>
+    <div class="page-actions">
+      <%= link_to "Edit Site", edit_site_path(@site), class: "btn btn-secondary" %>
+      <%= link_to "← Back to Sites", sites_path, class: "btn btn-outline" %>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 2rem;">
+    <div class="card-body">
+      <dl class="site-info">
+        <div class="info-group">
+          <dt>Tracking ID</dt>
+          <dd><code><%= @site.tracking_id %></code></dd>
+        </div>
+        <div class="info-group">
+          <dt>Created</dt>
+          <dd><%= @site.created_at.strftime("%B %d, %Y") %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Recent Events</h2>
+
+    <div class="card">
+      <% if @events && @events.any? %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Page</th>
+              <th>Referrer</th>
+              <th>Properties</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @events.each do |event| %>
+              <tr>
+                <td>
+                  <%= event.event_name.humanize %>
+                  <% if event.is_bot %>
+                    <span class="badge badge-secondary">Bot</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if event.page_url.present? %>
+                    <div class="truncate" title="<%= event.page_url %>">
+                      <%= event.page_url %>
+                    </div>
+                  <% else %>
+                    <span class="text-muted">-</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if event.referrer.present? %>
+                    <div class="truncate" title="<%= event.referrer %>">
+                      <%= event.referrer %>
+                    </div>
+                  <% else %>
+                    <span class="text-muted">Direct</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if event.properties.present? && event.properties.any? %>
+                    <details>
+                      <summary class="link">View</summary>
+                      <pre class="properties-view"><%= JSON.pretty_generate(event.properties) %></pre>
+                    </details>
+                  <% else %>
+                    <span class="text-muted">-</span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= event.created_at.strftime("%b %d, %Y %l:%M %p") %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <% if @events.size == 100 %>
+          <div class="table-footer">
+            Showing most recent 100 events
+          </div>
+        <% end %>
+      <% else %>
+        <div class="empty-state">
+          <p>No events recorded yet</p>
+          <p class="text-muted">Events will appear here once your site starts tracking user activity.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
