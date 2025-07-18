@@ -1,24 +1,24 @@
-# README
+# Travalytics
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A lightweight, privacy-focused web analytics platform built with Ruby on Rails. Track website visitor behavior without compromising user privacy.
 
-Things you may want to cover:
+## Features
 
-* Ruby version
+- **Simple Integration**: Add analytics to any website with a single script tag
+- **Real-time Tracking**: Monitor page views and user interactions as they happen
+- **Privacy-First**: No cookies, no personal data collection
+- **Multi-Site Support**: Track multiple websites from a single dashboard
+- **Event Tracking**: Track custom events like button clicks, form submissions, etc.
 
-* System dependencies
+### Tracking Custom Events
 
-* Configuration
+Once the script is loaded, you can track custom events:
 
-* Database creation
+```javascript
+// Track a custom event
+window.TravalyticsAnalytics.track('button_click', {
+  button_id: 'signup',
+  page: '/pricing'
+});
+```
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
