@@ -22,6 +22,46 @@ class SitesController < ApplicationController
 
   def show
     @events = @site.events.order(created_at: :desc).limit(100)
+
+    # Statistics
+    @total_events = @site.events.count
+    @total_page_views = @site.events.page_views.count
+
+    # Top paths (excluding bots)
+    # Get paths from properties or extract from URL
+    paths_hash = {}
+    @site.events
+      .where(is_bot: false)
+      .where.not(page_url: nil)
+      .pluck(:properties, :page_url)
+      .each do |properties, page_url|
+        path = properties&.dig("path") || begin
+          uri = URI.parse(page_url)
+          uri.path.presence || "/"
+        rescue
+          "/"
+        end
+        paths_hash[path] = (paths_hash[path] || 0) + 1
+      end
+    @top_paths = paths_hash.sort_by { |_, count| -count }.first(10)
+
+    # Top referrers (excluding bots and no referrer)
+    # Group referrers by domain to avoid duplicates from different paths
+    referrers_hash = {}
+    @site.events
+      .where(is_bot: false)
+      .where.not(referrer: [ nil, "" ])
+      .pluck(:referrer)
+      .each do |referrer|
+        domain = begin
+          uri = URI.parse(referrer)
+          uri.host || referrer
+        rescue
+          referrer
+        end
+        referrers_hash[domain] = (referrers_hash[domain] || 0) + 1
+      end
+    @top_referrers = referrers_hash.sort_by { |_, count| -count }.first(10)
   end
 
   def edit
