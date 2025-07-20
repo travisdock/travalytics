@@ -49,3 +49,6 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+
+# Ignore local MaxMind database (will be downloaded during build)
+/vendor/maxmind/*.mmdb

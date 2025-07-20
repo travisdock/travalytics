@@ -30,7 +30,7 @@ FROM base AS build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config && \
+    apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config curl ca-certificates && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
@@ -42,8 +42,17 @@ RUN bundle install && \
 # Copy application code
 COPY . .
 
-# Create vendor/maxmind directory for the GeoIP database
-RUN mkdir -p vendor/maxmind
+# Download MaxMind GeoLite2 database (REQUIRED for production)
+# You need to pass MAXMIND_LICENSE_KEY as a build argument
+ARG MAXMIND_LICENSE_KEY
+ENV MAXMIND_LICENSE_KEY=$MAXMIND_LICENSE_KEY
+RUN if [ -z "$MAXMIND_LICENSE_KEY" ]; then \
+      echo "ERROR: MAXMIND_LICENSE_KEY build argument is required for production builds"; \
+      echo "Please provide it with: docker build --build-arg MAXMIND_LICENSE_KEY=your_key"; \
+      exit 1; \
+    fi && \
+    ./bin/download_maxmind && \
+    test -f vendor/maxmind/GeoLite2-City.mmdb || (echo "ERROR: MaxMind database download failed" && exit 1)
 
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
