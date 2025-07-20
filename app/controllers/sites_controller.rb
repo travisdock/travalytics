@@ -38,8 +38,9 @@ class SitesController < ApplicationController
         path = properties&.dig("path") || begin
           uri = URI.parse(page_url)
           uri.path.presence || "/"
-        rescue
-          "/"
+        rescue URI::InvalidURIError => e
+          Rails.logger.warn "Invalid URL in event: #{page_url} - #{e.message}"
+          "[Invalid URL: #{page_url}]"
         end
         paths_hash[path] = (paths_hash[path] || 0) + 1
       end
@@ -56,7 +57,8 @@ class SitesController < ApplicationController
         domain = begin
           uri = URI.parse(referrer)
           uri.host || referrer
-        rescue
+        rescue URI::InvalidURIError => e
+          Rails.logger.warn "Invalid referrer URL: #{referrer} - #{e.message}"
           referrer
         end
         referrers_hash[domain] = (referrers_hash[domain] || 0) + 1
