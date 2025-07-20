@@ -64,6 +64,15 @@ class SitesController < ApplicationController
         referrers_hash[domain] = (referrers_hash[domain] || 0) + 1
       end
     @top_referrers = referrers_hash.sort_by { |_, count| -count }.first(10)
+
+    # Top countries (excluding bots)
+    @top_countries = @site.events
+      .where(is_bot: false)
+      .where.not(country: [ nil, "" ])
+      .group(:country)
+      .count
+      .sort_by { |_, count| -count }
+      .first(10)
   end
 
   def edit

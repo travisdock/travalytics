@@ -8,6 +8,11 @@ class EventTracker
     # Enrich properties with request data if available
     enriched_properties = properties.merge(extract_request_data)
 
+    # Get IP address and geo data
+    ip_address = @request&.remote_ip
+    anonymized_ip = anonymize_ip(ip_address)
+    geo_data = GeoIpService.lookup(ip_address)
+
     Event.create!(
       site: @site,
       event_name: event_name,
@@ -15,8 +20,11 @@ class EventTracker
       page_url: properties[:url] || properties["url"],
       referrer: properties[:referrer] || properties["referrer"] || @request&.referrer,
       user_agent: @request&.user_agent,
-      ip_address: anonymize_ip(@request&.remote_ip),
-      is_bot: BotDetector.bot?(@request&.user_agent)
+      ip_address: anonymized_ip,
+      is_bot: BotDetector.bot?(@request&.user_agent),
+      country: geo_data[:country],
+      city: geo_data[:city],
+      region: geo_data[:region]
     )
   end
 

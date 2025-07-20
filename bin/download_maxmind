@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -e
+
+# This script downloads the MaxMind GeoLite2 City database
+# You need to set MAXMIND_LICENSE_KEY environment variable
+# Get your license key from: https://www.maxmind.com/en/geolite2/signup
+
+if [ -z "$MAXMIND_LICENSE_KEY" ]; then
+  echo "Error: MAXMIND_LICENSE_KEY environment variable is not set"
+  echo "Please register at https://www.maxmind.com/en/geolite2/signup to get a license key"
+  exit 1
+fi
+
+VENDOR_DIR="vendor/maxmind"
+DB_FILE="GeoLite2-City.mmdb"
+DOWNLOAD_URL="https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=${MAXMIND_LICENSE_KEY}&suffix=tar.gz"
+
+echo "Creating vendor/maxmind directory..."
+mkdir -p $VENDOR_DIR
+
+echo "Downloading GeoLite2-City database..."
+curl -L "$DOWNLOAD_URL" -o "${VENDOR_DIR}/GeoLite2-City.tar.gz"
+
+echo "Extracting database..."
+cd $VENDOR_DIR
+tar -xzf GeoLite2-City.tar.gz --strip-components=1 --wildcards "*/${DB_FILE}"
+rm -f GeoLite2-City.tar.gz
+
+echo "MaxMind database downloaded successfully to ${VENDOR_DIR}/${DB_FILE}"
+echo ""
+echo "The database is now ready to use. Make sure to set:"
+echo "MAXMIND_DB_PATH=vendor/maxmind/GeoLite2-City.mmdb"
