@@ -36,6 +36,9 @@
 *.swp
 vendor/bundle/
 
+# MaxMind GeoIP database files
+vendor/maxmind/*.mmdb
+
 # ClaudeOnRails
 .claude-on-rails/sessions/
 .claude-swarm/

@@ -11,7 +11,7 @@
 # Example:
 # MAXMIND_DB_PATH=/path/to/GeoLite2-City.mmdb
 
-Rails.application.config.maxmind_db_path = ENV["MAXMIND_DB_PATH"]
+Rails.application.config.maxmind_db_path = ENV.fetch("MAXMIND_DB_PATH", "vendor/maxmind/GeoLite2-City.mmdb")
 
 # Optionally disable geo lookup in development/test
 Rails.application.config.enable_geo_lookup = ENV.fetch("ENABLE_GEO_LOOKUP", Rails.env.production?).to_s == "true"
