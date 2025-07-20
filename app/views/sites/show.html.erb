@@ -37,6 +37,12 @@
           <p class="stat-value" style="font-size: 2rem; font-weight: bold; margin: 0;"><%= number_with_delimiter(@total_page_views) %></p>
         </div>
       </div>
+      <div class="card">
+        <div class="card-body">
+          <h3 class="stat-label" style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Countries</h3>
+          <p class="stat-value" style="font-size: 2rem; font-weight: bold; margin: 0;"><%= @top_countries&.size || 0 %></p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -83,6 +89,26 @@
           <% end %>
         </div>
       </div>
+      
+      <div class="card">
+        <div class="card-body">
+          <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Top Countries</h3>
+          <% if @top_countries&.any? %>
+            <table class="table table-sm">
+              <tbody>
+                <% @top_countries.each do |country, count| %>
+                  <tr>
+                    <td><%= country %></td>
+                    <td style="text-align: right; width: 60px;"><%= number_with_delimiter(count) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <p class="text-muted">No country data yet</p>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -96,6 +122,7 @@
             <tr>
               <th>Event</th>
               <th>Path</th>
+              <th>Location</th>
               <th>Referrer</th>
               <th>Properties</th>
               <th>Time</th>
@@ -115,6 +142,16 @@
                   <% if path.present? %>
                     <div class="truncate" title="<%= path %>">
                       <%= path %>
+                    </div>
+                  <% else %>
+                    <span class="text-muted">-</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% location_parts = [event.city, event.region, event.country].compact %>
+                  <% if location_parts.any? %>
+                    <div class="truncate" title="<%= location_parts.join(', ') %>">
+                      <%= location_parts.join(', ') %>
                     </div>
                   <% else %>
                     <span class="text-muted">-</span>

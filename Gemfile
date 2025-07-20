@@ -38,6 +38,9 @@ gem "thruster", require: false
 # CORS support for cross-domain analytics tracking
 gem "rack-cors"
 
+# MaxMind GeoIP2 for IP geolocation
+gem "maxmind-geoip2"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
