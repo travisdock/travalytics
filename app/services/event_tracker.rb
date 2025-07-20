@@ -7,7 +7,7 @@ class EventTracker
   def track(event_name, properties = {})
     # Enrich properties with request data if available
     enriched_properties = properties.merge(extract_request_data)
-    
+
     # Get IP address and geo data
     ip_address = @request&.remote_ip
     anonymized_ip = anonymize_ip(ip_address)

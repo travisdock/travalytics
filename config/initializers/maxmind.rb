@@ -1,5 +1,5 @@
 # MaxMind GeoIP2 Configuration
-# 
+#
 # To use MaxMind GeoIP2, you need to:
 # 1. Download a GeoLite2 or GeoIP2 database from https://www.maxmind.com
 # 2. Set the MAXMIND_DB_PATH environment variable to the database file path

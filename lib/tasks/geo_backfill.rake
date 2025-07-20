@@ -8,7 +8,7 @@ namespace :geo do
 
     # Get all events without geo data but with IP addresses
     events_to_update = Event.where(country: nil)
-                           .where.not(ip_address: [nil, ""])
+                           .where.not(ip_address: [ nil, "" ])
 
     total = events_to_update.count
     puts "Found #{total} events to update with geo data..."
@@ -26,7 +26,7 @@ namespace :geo do
         # Reconstruct the original IP from the anonymized version
         # Since we zero out the last octet, we'll use .1 for the lookup
         # This will still give us accurate country/city/region data
-        lookup_ip = event.ip_address.gsub(/\.0$/, '.1')
+        lookup_ip = event.ip_address.gsub(/\.0$/, ".1")
 
         geo_data = GeoIpService.lookup(lookup_ip)
 
