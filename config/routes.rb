@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   end
 
   # Site management
-  resources :sites
+  resources :sites do
+    member do
+      get :page_durations
+    end
+  end
 
   # User settings
   resource :settings, only: [ :edit, :update ] do

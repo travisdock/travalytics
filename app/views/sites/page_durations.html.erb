@@ -1,0 +1,94 @@
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">Page Duration Statistics</h1>
+    <p class="page-subtitle"><%= @site.name %> - <%= @site.domain %></p>
+    <div class="page-actions">
+      <%= link_to "← Back to Site", site_path(@site), class: "btn btn-outline" %>
+    </div>
+  </div>
+
+  <div class="stats-overview" style="margin-bottom: 2rem;">
+    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="stat-label" style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Average Duration</h3>
+          <p class="stat-value" style="font-size: 2rem; font-weight: bold; margin: 0;">
+            <%= number_with_precision(@total_average_duration, precision: 1) %>s
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h3 class="stat-label" style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Total Duration Events</h3>
+          <p class="stat-value" style="font-size: 2rem; font-weight: bold; margin: 0;">
+            <%= number_with_delimiter(@total_duration_events) %>
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h3 class="stat-label" style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Highest Duration</h3>
+          <p class="stat-value" style="font-size: 2rem; font-weight: bold; margin: 0;">
+            <%= number_with_precision(@highest_duration, precision: 1) %>s
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h3 class="stat-label" style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Lowest Duration</h3>
+          <p class="stat-value" style="font-size: 2rem; font-weight: bold; margin: 0;">
+            <%= number_with_precision(@lowest_duration, precision: 1) %>s
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Duration by Page</h2>
+
+    <div class="card">
+      <% if @page_duration_stats.any? %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Page Path</th>
+              <th style="text-align: right;">Average Duration</th>
+              <th style="text-align: right;">Min Duration</th>
+              <th style="text-align: right;">Max Duration</th>
+              <th style="text-align: right;">Event Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @page_duration_stats.each do |stat| %>
+              <tr>
+                <td>
+                  <div class="truncate" style="max-width: 400px;" title="<%= stat[:path] %>">
+                    <%= stat[:path] %>
+                  </div>
+                </td>
+                <td style="text-align: right;">
+                  <%= number_with_precision(stat[:average], precision: 1) %>s
+                </td>
+                <td style="text-align: right;">
+                  <%= number_with_precision(stat[:min], precision: 1) %>s
+                </td>
+                <td style="text-align: right;">
+                  <%= number_with_precision(stat[:max], precision: 1) %>s
+                </td>
+                <td style="text-align: right;">
+                  <%= number_with_delimiter(stat[:count]) %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <div class="empty-state">
+          <p>No page duration data recorded yet</p>
+          <p class="text-muted">Page duration events will appear here once your site starts tracking user engagement time.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
