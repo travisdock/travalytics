@@ -1,0 +1,15 @@
+<div class="form-group">
+  <label class="form-label">Embed Code</label>
+  <pre class="code-block">&lt;!-- Travalytics Analytics --&gt;
+&lt;script&gt;
+(function() {
+  const script = document.createElement('script');
+  script.src = '<%= request.base_url %>/analytics.js';
+  script.setAttribute('data-tracking-id', '<%= site.tracking_id %>');
+  script.setAttribute('data-endpoint', '<%= request.base_url %>');
+  script.async = true;
+  document.head.appendChild(script);
+})();
+&lt;/script&gt;</pre>
+  <p class="form-hint">Add this code to your website's &lt;head&gt; section</p>
+</div>
