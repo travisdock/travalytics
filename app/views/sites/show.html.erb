@@ -8,21 +8,6 @@
     </div>
   </div>
 
-  <div class="card" style="margin-bottom: 2rem;">
-    <div class="card-body">
-      <dl class="site-info">
-        <div class="info-group">
-          <dt>Tracking ID</dt>
-          <dd><code><%= @site.tracking_id %></code></dd>
-        </div>
-        <div class="info-group">
-          <dt>Created</dt>
-          <dd><%= format_date(@site.created_at) %></dd>
-        </div>
-      </dl>
-    </div>
-  </div>
-
   <div class="stats-overview" style="margin-bottom: 2rem;">
     <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
       <div class="card">
