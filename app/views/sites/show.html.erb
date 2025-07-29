@@ -32,6 +32,20 @@
     </div>
   </div>
 
+  <div class="page-views-chart" style="margin-bottom: 2rem;">
+    <div class="card">
+      <div class="card-body">
+        <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Page Views - Last 10 Days</h3>
+        <div style="position: relative; height: 300px;">
+          <canvas id="pageViewsChart" 
+                  data-controller="chart"
+                  data-chart-labels-value='<%= @chart_data.keys.map { |date| date.strftime("%b %d") }.to_json %>'
+                  data-chart-data-value='<%= @chart_data.values.to_json %>'></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="stats-details" style="margin-bottom: 2rem;">
     <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
       <div class="card">
