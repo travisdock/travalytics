@@ -23,12 +23,13 @@ class SitesController < ApplicationController
   def show
     @events = @site.events
       .where(event_name: "page_view")
+      .exclude_localhost
       .order(created_at: :desc)
       .limit(100)
 
     # Statistics
-    @total_events = @site.events.count
-    @total_page_views = @site.events.page_views.count
+    @total_events = @site.events.exclude_localhost.count
+    @total_page_views = @site.events.page_views.exclude_localhost.count
 
     # Page views data for past 10 days
     end_date = Date.current.end_of_day
@@ -36,6 +37,7 @@ class SitesController < ApplicationController
     @page_views_by_day = @site.events
       .page_views
       .humans_only
+      .exclude_localhost
       .where(created_at: start_date..end_date)
       .group("DATE(created_at)")
       .count
@@ -54,6 +56,7 @@ class SitesController < ApplicationController
     paths_hash = {}
     @site.events
       .where(is_bot: false)
+      .exclude_localhost
       .where.not(page_url: nil)
       .pluck(:properties, :page_url)
       .each do |properties, page_url|
@@ -73,6 +76,7 @@ class SitesController < ApplicationController
     referrers_hash = {}
     @site.events
       .where(is_bot: false)
+      .exclude_localhost
       .where.not(referrer: [ nil, "" ])
       .pluck(:referrer)
       .each do |referrer|
@@ -90,6 +94,7 @@ class SitesController < ApplicationController
     # Top countries (excluding bots)
     @top_countries = @site.events
       .where(is_bot: false)
+      .exclude_localhost
       .where.not(country: [ nil, "" ])
       .group(:country)
       .count
@@ -102,6 +107,7 @@ class SitesController < ApplicationController
     duration_events = @site.events
       .where(event_name: "page_duration")
       .where(is_bot: false)
+      .exclude_localhost
       .where.not(properties: nil)
 
     # Extract duration data

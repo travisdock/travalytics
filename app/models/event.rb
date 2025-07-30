@@ -18,6 +18,14 @@ class Event < ApplicationRecord
   scope :humans_only, -> { where(is_bot: false) }
   scope :bots_only, -> { where(is_bot: true) }
 
+  # Localhost filtering scope
+  scope :exclude_localhost, -> {
+    where.not("page_url LIKE ?", "%localhost%")
+         .where.not("page_url LIKE ?", "%127.0.0.1%")
+         .where.not("referrer LIKE ?", "%localhost%")
+         .where.not("referrer LIKE ?", "%127.0.0.1%")
+  }
+
   # Helper methods for extracting common properties
   def page_path
     properties&.dig("path")
