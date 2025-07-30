@@ -30,6 +30,25 @@ class SitesController < ApplicationController
     @total_events = @site.events.count
     @total_page_views = @site.events.page_views.count
 
+    # Page views data for past 10 days
+    end_date = Date.current.end_of_day
+    start_date = 9.days.ago.beginning_of_day
+    @page_views_by_day = @site.events
+      .page_views
+      .humans_only
+      .where(created_at: start_date..end_date)
+      .group("DATE(created_at)")
+      .count
+      .transform_keys { |k| k.to_date }
+
+    # Fill in missing days with 0 views
+    (start_date.to_date..end_date.to_date).each do |date|
+      @page_views_by_day[date] ||= 0
+    end
+
+    # Sort by date and prepare data for chart
+    @chart_data = @page_views_by_day.sort_by { |date, _| date }.to_h
+
     # Top paths (excluding bots)
     # Get paths from properties or extract from URL
     paths_hash = {}
