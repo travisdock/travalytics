@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_20_163535) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_31_000031) do
   create_table "events", force: :cascade do |t|
     t.integer "site_id", null: false
     t.string "event_name", null: false
@@ -28,6 +28,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_20_163535) do
     t.index ["event_name"], name: "index_events_on_event_name"
     t.index ["is_bot"], name: "index_events_on_is_bot"
     t.index ["site_id"], name: "index_events_on_site_id"
+  end
+
+  create_table "external_events", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "event_type", null: false
+    t.string "title", null: false
+    t.text "description"
+    t.datetime "event_date", null: false
+    t.string "url"
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_date"], name: "index_external_events_on_event_date"
+    t.index ["event_type"], name: "index_external_events_on_event_type"
+    t.index ["user_id"], name: "index_external_events_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -61,6 +76,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_20_163535) do
   end
 
   add_foreign_key "events", "sites"
+  add_foreign_key "external_events", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "sites", "users"
 end

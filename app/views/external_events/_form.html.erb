@@ -1,0 +1,44 @@
+<%= form_with model: external_event do |form| %>
+  <% if external_event.errors.any? %>
+    <div class="error-messages">
+      <h3><%= pluralize(external_event.errors.count, "error") %> prohibited this external event from being saved:</h3>
+      <ul>
+        <% external_event.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :event_type %>
+    <%= form.select :event_type, options_for_select(ExternalEvent.event_types_for_select, external_event.event_type), 
+                    { prompt: "Select event type" }, 
+                    { class: "form-control" } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: "form-control", placeholder: "e.g., Tweeted about new feature" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, class: "form-control", rows: 3, placeholder: "Optional details about this event" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :event_date %>
+    <%= form.datetime_local_field :event_date, class: "form-control", value: external_event.event_date&.strftime('%Y-%m-%dT%H:%M') %>
+  </div>
+
+  <div class="field">
+    <%= form.label :url %>
+    <%= form.text_field :url, class: "form-control", placeholder: "https://twitter.com/..." %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: "btn btn-primary" %>
+    <%= link_to "Cancel", external_events_path, class: "btn btn-outline" %>
+  </div>
+<% end %>

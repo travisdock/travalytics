@@ -49,6 +49,11 @@ class SitesController < ApplicationController
     # Sort by date and prepare data for chart
     @chart_data = @page_views_by_day.sort_by { |date, _| date }.to_h
 
+    # Get user's external events for the same date range
+    @external_events = current_user.external_events
+      .by_date_range(start_date, end_date)
+      .order(event_date: :asc)
+
     # Top paths (excluding bots)
     # Get paths from properties or extract from URL
     paths_hash = {}
