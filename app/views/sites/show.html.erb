@@ -36,11 +36,31 @@
     <div class="card">
       <div class="card-body">
         <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Page Views - Last 10 Days</h3>
+        <% if @external_events.any? %>
+          <div class="external-events-timeline" style="margin-bottom: 1rem; padding: 0.75rem; background-color: #f3f4f6; border-radius: 0.375rem;">
+            <p style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">External Events:</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              <% @external_events.each do |event| %>
+                <div style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; background-color: white; border: 1px solid #e5e7eb; border-radius: 0.25rem; font-size: 0.75rem;">
+                  <span style="font-weight: 500;"><%= event.event_date.strftime("%b %d") %></span>
+                  <span style="color: #6b7280;">•</span>
+                  <span><%= event.event_type.humanize %></span>
+                  <span style="color: #6b7280;">-</span>
+                  <span title="<%= event.title %>"><%= truncate(event.title, length: 30) %></span>
+                  <% if event.url.present? %>
+                    <%= link_to "↗", event.url, target: "_blank", rel: "noopener", style: "text-decoration: none; color: #3b82f6;" %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
         <div style="position: relative; height: 300px;">
           <canvas id="pageViewsChart" 
                   data-controller="chart"
                   data-chart-labels-value='<%= @chart_data.keys.map { |date| date.strftime("%b %d") }.to_json %>'
-                  data-chart-data-value='<%= @chart_data.values.to_json %>'></canvas>
+                  data-chart-data-value='<%= @chart_data.values.to_json %>'
+                  data-chart-external-events-value='<%= @external_events.map { |e| { date: e.event_date.to_date.to_s, title: e.title, type: e.event_type } }.to_json %>'></canvas>
         </div>
       </div>
     </div>

@@ -20,6 +20,9 @@ Rails.application.routes.draw do
     patch :update_password
   end
 
+  # External events
+  resources :external_events, except: [ :show ]
+
   # Dashboard routes
   resource :dashboard, only: [ :show ] do
     member do
