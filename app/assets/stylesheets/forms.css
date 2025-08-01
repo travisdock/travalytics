@@ -1,0 +1,377 @@
+/* Box Sizing Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Container Styles */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Form Container Styles */
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Form Field Wrapper */
+.field {
+  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Ensure forms don't overflow */
+form {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Labels */
+.field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+/* Form Controls - Base Styles */
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="time"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #1f2937;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+/* Form Controls - Focus State */
+.form-control:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="url"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  color: #1f2937;
+  background-color: #fff;
+  border-color: #3b82f6;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Textarea Specific */
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Select Specific */
+select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  padding-right: 2.5rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Checkbox and Radio */
+input[type="checkbox"],
+input[type="radio"] {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+/* Form Actions */
+.actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Button Styles */
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Primary Button */
+.btn-primary {
+  color: #fff;
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.btn-primary:focus {
+  color: #fff;
+  background-color: #2563eb;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  color: #374151;
+  background-color: #e5e7eb;
+  border-color: #e5e7eb;
+}
+
+.btn-secondary:hover {
+  color: #374151;
+  background-color: #d1d5db;
+  border-color: #d1d5db;
+}
+
+/* Outline Button */
+.btn-outline {
+  color: #6b7280;
+  background-color: transparent;
+  border-color: #d1d5db;
+}
+
+.btn-outline:hover {
+  color: #374151;
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* Danger Outline Button */
+.btn-outline-danger {
+  color: #dc2626;
+  background-color: transparent;
+  border-color: #dc2626;
+}
+
+.btn-outline-danger:hover {
+  color: #fff;
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Small Buttons */
+.btn-sm {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8125rem;
+}
+
+/* Form Submit Buttons */
+input[type="submit"] {
+  @extend .btn;
+  @extend .btn-primary;
+}
+
+/* Error Messages */
+.error-messages {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.error-messages h3 {
+  color: #dc2626;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.error-messages ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.error-messages li {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Field with Errors */
+.field_with_errors {
+  display: inline;
+}
+
+.field_with_errors input,
+.field_with_errors textarea,
+.field_with_errors select {
+  border-color: #dc2626;
+}
+
+.field_with_errors label {
+  color: #dc2626;
+}
+
+/* Help Text */
+.help-text {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+/* Inline Forms */
+.form-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.form-inline .field {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+/* Form Group for Related Fields */
+.form-group {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: #1f2937;
+}
+
+/* Placeholder Styling */
+::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+/* Disabled State */
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Required Field Indicator */
+.field.required label::after {
+  content: " *";
+  color: #dc2626;
+}
+
+/* Form Cards */
+.form-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Card Components */
+.card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-body {
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+/* Page Header */
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+}
+
+.page-subtitle {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+  
+  .form-container {
+    padding: 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .page-header {
+    padding: 0 0.5rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .actions .btn {
+    width: 100%;
+  }
+}
