@@ -1,0 +1,16 @@
+<%= {
+  type: :function,
+  function: {
+    name: action_name,
+    description: "This action pulls necessary information (page views and external events fo the past week) about a site to create a weekly summary",
+    parameters: {
+      type: :object,
+      properties: {
+        site_id: {
+          type: :integer,
+          description: "The id of the site for which the weekly summary is generated",
+        }
+      }
+    }
+  }
+}.to_json.html_safe %>
