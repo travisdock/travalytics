@@ -18,9 +18,11 @@ class AnalyticsConsultantAgent < ApplicationAgent
 
     external_events = ExternalEvent.where(user_id: @site.user_id, created_at: 1.week.ago..Time.current).select(:event_type, :title, :description, :event_date, :url).to_json
 
-    message = { stats: stats }
-    message.merge!({ web_events: JSON.parse(events_select) })
-    message.merge!({ external_events: JSON.parse(external_events) })
+    message = {
+      stats: stats,
+      web_events: JSON.parse(events_select),
+      external_events: JSON.parse(external_events)
+    }
     prompt(message: message.to_json)
   end
 
