@@ -1,0 +1,5 @@
+openrouter:
+  service: "OpenRouter"
+  api_key: <%= Rails.application.credentials.dig(:openrouter, :api_key) %>
+  model: "gpt-4o-mini"
+  temperature: 0.7
