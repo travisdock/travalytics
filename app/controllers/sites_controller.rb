@@ -175,7 +175,7 @@ class SitesController < ApplicationController
 
   def generate_weekly_summary
     begin
-      @summary = @site.create_weekly_summary
+      @site.create_weekly_summary
       redirect_to weekly_summary_site_path(@site), notice: "Weekly summary generated successfully"
     rescue => e
       Rails.logger.error "Failed to generate weekly summary: #{e.message}"
