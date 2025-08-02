@@ -1,0 +1,78 @@
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">Weekly Summary</h1>
+    <p class="page-subtitle"><%= @site.name %> - <%= @site.domain %></p>
+    <div class="page-actions">
+      <%= button_to "Generate New Summary", generate_weekly_summary_site_path(@site), method: :post, class: "btn btn-primary", data: { turbo: true, turbo_submits_with: "Generating..." } %>
+      <%= link_to "← Back to Site", site_path(@site), class: "btn btn-outline" %>
+    </div>
+  </div>
+
+  <% if @latest_summary %>
+    <div class="section">
+      <h2 class="section-title">Latest Summary</h2>
+      <div class="card">
+        <div class="card-body">
+          <div class="summary-metadata" style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;">
+            <p style="font-size: 0.875rem; color: #6b7280;">
+              Generated on <%= @latest_summary.generated_at.strftime("%B %d, %Y at %I:%M %p") %>
+            </p>
+          </div>
+          <div class="summary-content" style="line-height: 1.6;">
+            <% if @latest_summary.content.present? %>
+              <%= render_markdown(@latest_summary.content) %>
+            <% else %>
+              <p class="text-muted">No content available</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="card">
+      <div class="card-body">
+        <div class="empty-state">
+          <p>No weekly summary has been generated yet</p>
+          <p class="text-muted">Click "Generate New Summary" to create your first weekly analytics summary.</p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @weekly_summaries.any? %>
+    <div class="section" style="margin-top: 2rem;">
+      <h2 class="section-title">Previous Summaries</h2>
+      <div class="card">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Generated Date</th>
+              <th>Preview</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @weekly_summaries.each do |summary| %>
+              <tr>
+                <td><%= summary.generated_at.strftime("%B %d, %Y at %I:%M %p") %></td>
+                <td>
+                  <div class="truncate" style="max-width: 400px;">
+                    <%= truncate(strip_tags(summary.content), length: 100) %>
+                  </div>
+                </td>
+                <td>
+                  <details>
+                    <summary class="link">View Full Summary</summary>
+                    <div style="padding: 1rem; margin-top: 0.5rem; background-color: #f9fafb; border-radius: 0.375rem;">
+                      <%= render_markdown(summary.content) %>
+                    </div>
+                  </details>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>
