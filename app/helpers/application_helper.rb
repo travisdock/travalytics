@@ -27,15 +27,8 @@ module ApplicationHelper
     # Convert italic text
     html = html.gsub(/\*(.+?)\*/, '<em>\1</em>')
 
-    # Convert bullet lists (both * and - styles)
-    html = html.gsub(/^[\*\-] (.+)$/, '<li>\1</li>')
-
-    # Group consecutive list items into ul tags
-    html = html.gsub(/(<li>(?!.*\d+\.).+<\/li>\n?)+/m) { |list| "<ul>#{list}</ul>" }
-
-    # Convert numbered lists
-    html = html.gsub(/^\d+\. (.+)$/, '<li class="numbered">\1</li>')
-    html = html.gsub(/(<li class="numbered">.+<\/li>\n?)+/m) { |list| "<ol>#{list.gsub(' class="numbered"', '')}</ol>" }
+    # Convert lists with proper nesting support
+    html = convert_lists(html)
 
     # Convert line breaks to paragraphs
     paragraphs = html.split("\n\n").map { |p| p.strip }.reject(&:blank?)
@@ -49,5 +42,80 @@ module ApplicationHelper
 
     # Sanitize HTML to prevent XSS
     sanitize(html, tags: %w[h1 h2 h3 h4 h5 h6 p strong em ul ol li br], attributes: {})
+  end
+
+  private
+
+  def convert_lists(text)
+    lines = text.split("\n")
+    result = []
+
+    lines.each do |line|
+      case line
+      when /^(\s*)[\*\-] (.+)$/
+        # Handle bullet lists with indentation
+        indent = $1.length
+        content = $2
+        if indent == 0
+          result << "<li>#{content}</li>"
+        else
+          # Nested list item
+          result << "#{' ' * indent}<li>#{content}</li>"
+        end
+      when /^(\s*)(\d+)\. (.+)$/
+        # Handle numbered lists with indentation
+        indent = $1.length
+        content = $3
+        if indent == 0
+          result << "<li class=\"numbered\">#{content}</li>"
+        else
+          # Nested numbered list item
+          result << "#{' ' * indent}<li class=\"numbered\">#{content}</li>"
+        end
+      else
+        result << line
+      end
+    end
+
+    html = result.join("\n")
+
+    # Group consecutive list items into ul/ol tags
+    # Handle bullet lists
+    html = html.gsub(/(<li>(?!\s)(?!.*class="numbered").+<\/li>\n?)+/m) do |list|
+      "<ul>#{list}</ul>"
+    end
+
+    # Handle nested bullet lists
+    html = html.gsub(/(\s+<li>(?!.*class="numbered").+<\/li>\n?)+/m) do |list|
+      indent = list[/^\s*/]
+      cleaned_list = list.gsub(/^\s+/, "")
+      "#{indent}<ul>#{cleaned_list}</ul>"
+    end
+
+    # Handle numbered lists by looking for consecutive numbered items
+    # Split by double newlines to process each paragraph block separately
+    blocks = html.split(/\n\n+/)
+    processed_blocks = blocks.map do |block|
+      # Check if this block contains numbered list items
+      if block.include?('<li class="numbered">')
+        # Group consecutive numbered items within this block
+        block.gsub(/(<li class="numbered">.+<\/li>\n?)+/m) do |list|
+          "<ol>#{list.gsub(' class="numbered"', '')}</ol>"
+        end
+      else
+        block
+      end
+    end
+
+    html = processed_blocks.join("\n\n")
+
+    # Handle nested numbered lists
+    html = html.gsub(/(\s+<li class="numbered">.+<\/li>\n?)+/m) do |list|
+      indent = list[/^\s*/]
+      cleaned_list = list.gsub(/^\s+/, "").gsub(' class="numbered"', "")
+      "#{indent}<ol>#{cleaned_list}</ol>"
+    end
+
+    html
   end
 end
