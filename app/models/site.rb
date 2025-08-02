@@ -8,6 +8,10 @@ class Site < ApplicationRecord
 
   before_validation :generate_tracking_id, on: :create
 
+  def create_weekly_summary
+    AnalyticsConsultantAgent.with(site_id: id).weekly_summary.generate_later
+  end
+
   private
 
   def generate_tracking_id
