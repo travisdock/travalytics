@@ -9,7 +9,7 @@ class AnalyticsConsultantAgent < ApplicationAgent
       countries: events.group(:country).count.sort_by { |_, count| -count },
       cities: events.group(:city).count.sort_by { |_, count| -count }.first(10),
       regions: events.group(:region).count.sort_by { |_, count| -count }.first(10),
-      referrers: events.where.not(referrer: [nil, '']).group(:referrer).count.sort_by { |_, count| -count }.first(10),
+      referrers: events.where.not(referrer: [ nil, "" ]).group(:referrer).count.sort_by { |_, count| -count }.first(10),
       daily_views: events.group("DATE(created_at)").count,
       unique_countries: events.distinct.count(:country),
       unique_pages: events.distinct.count(:page_url)
@@ -20,7 +20,7 @@ class AnalyticsConsultantAgent < ApplicationAgent
 
     message = { stats: stats }
     message.merge!({ web_events: JSON.parse(events_select) })
-    message.merge!({ external_events: JSON.parse(external_events)})
+    message.merge!({ external_events: JSON.parse(external_events) })
     prompt(message: message.to_json)
   end
 
