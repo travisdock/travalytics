@@ -3,14 +3,14 @@ class PasswordsController < ApplicationController
   before_action :set_user_by_token, only: %i[ edit update ]
 
   def new
+    redirect_to root_path, alert: "Sorry, new user registration is temporarily disabled. Please check back later."
   end
 
   def create
     # if user = User.find_by(email_address: params[:email_address])
     #  PasswordsMailer.reset(user).deliver_later
     # end
-
-    redirect_to new_session_path, notice: "Please contact an administrator to change your password"
+    redirect_to root_path, alert: "Please contact an administrator to change your password"
   end
 
   def edit

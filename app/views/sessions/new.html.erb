@@ -11,7 +11,7 @@
         <%= flash[:alert] %>
       </div>
     <% end %>
-    
+
     <% if flash[:notice] %>
       <div class="flash-message flash-notice">
         <%= flash[:notice] %>
@@ -27,7 +27,7 @@
                             placeholder: "Email address", 
                             value: params[:email_address] %>
       </div>
-      
+
       <div class="field">
         <%= form.password_field :password, 
                                required: true, 
@@ -35,7 +35,7 @@
                                placeholder: "Password", 
                                maxlength: 72 %>
       </div>
-      
+
       <%= form.submit "Sign in" %>
     <% end %>
 
