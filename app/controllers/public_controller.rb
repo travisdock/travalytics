@@ -55,7 +55,7 @@ class PublicController < ApplicationController
           getOrCreateVisitorUuid() {
             const storageKey = `travalytics_visitor_${this.trackingId}`;
             const storedData = localStorage.getItem(storageKey);
-      #{'      '}
+            
             if (storedData) {
               try {
                 const data = JSON.parse(storedData);
