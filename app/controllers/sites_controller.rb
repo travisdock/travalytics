@@ -29,6 +29,7 @@ class SitesController < ApplicationController
     # Statistics
     @total_events = @site.events.count
     @total_page_views = @site.events.page_views.count
+    @unique_visitors = @site.events.page_views.unique_visitors_count
 
     # Page views data for past 10 days
     end_date = Date.current.end_of_day

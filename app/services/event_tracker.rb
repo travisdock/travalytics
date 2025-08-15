@@ -4,7 +4,7 @@ class EventTracker
     @site = site
   end
 
-  def track(event_name, properties = {})
+  def track(event_name, properties = {}, visitor_uuid: nil)
     # Enrich properties with request data if available
     enriched_properties = properties.merge(extract_request_data)
 
@@ -24,7 +24,8 @@ class EventTracker
       is_bot: BotDetector.bot?(@request&.user_agent),
       country: geo_data[:country],
       city: geo_data[:city],
-      region: geo_data[:region]
+      region: geo_data[:region],
+      visitor_uuid: visitor_uuid
     )
   end
 

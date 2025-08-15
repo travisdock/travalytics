@@ -10,6 +10,7 @@ class DashboardsController < ApplicationController
         site: site,
         total_events: site.events.humans_only.count,
         page_views: site.events.humans_only.page_views.count,
+        unique_visitors: site.events.humans_only.page_views.unique_visitors_count,
         bot_traffic: site.events.bots_only.count,
         popular_pages: site.events.humans_only.page_views
                           .group("properties->>'path'")

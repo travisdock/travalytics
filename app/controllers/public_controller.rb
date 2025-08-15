@@ -18,11 +18,70 @@ class PublicController < ApplicationController
       (function() {
         'use strict';
 
+        // Check for developer exclusion URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('travalytics_exclude_me') === 'true') {
+          localStorage.setItem('travalytics_developer_mode', 'true');
+          console.log('Travalytics: Developer mode enabled - tracking disabled');
+        } else if (urlParams.get('travalytics_include_me') === 'true') {
+          localStorage.removeItem('travalytics_developer_mode');
+          console.log('Travalytics: Developer mode disabled - tracking enabled');
+        }
+
+        // Skip all tracking if developer mode is enabled
+        if (localStorage.getItem('travalytics_developer_mode') === 'true') {
+          console.log('Travalytics: Developer mode - tracking disabled');
+          return;
+        }
+
         class Analytics {
           constructor(trackingId) {
             this.trackingId = trackingId;
             this.endpoint = null; // Will be set during initialization
             this.pageStartTime = Date.now();
+            this.visitorUuid = this.getOrCreateVisitorUuid();
+          }
+
+          // Generate UUID v4
+          generateUuid() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+              const r = Math.random() * 16 | 0;
+              const v = c === 'x' ? r : (r & 0x3 | 0x8);
+              return v.toString(16);
+            });
+          }
+
+          // Get or create visitor UUID with 2-week expiration
+          getOrCreateVisitorUuid() {
+            const storageKey = `travalytics_visitor_${this.trackingId}`;
+            const storedData = localStorage.getItem(storageKey);
+      #{'      '}
+            if (storedData) {
+              try {
+                const data = JSON.parse(storedData);
+                // Check if UUID has expired (2 weeks = 1209600000 ms)
+                if (data.expires && data.expires > Date.now()) {
+                  return data.uuid;
+                }
+              } catch (e) {
+                // Invalid data, regenerate
+              }
+            }
+
+            // Generate new UUID with 2-week expiration
+            const newUuid = this.generateUuid();
+            const expirationTime = Date.now() + (14 * 24 * 60 * 60 * 1000); // 2 weeks
+      #{'      '}
+            try {
+              localStorage.setItem(storageKey, JSON.stringify({
+                uuid: newUuid,
+                expires: expirationTime
+              }));
+            } catch (e) {
+              console.warn('Travalytics: Unable to save visitor UUID to localStorage');
+            }
+
+            return newUuid;
           }
 
           init() {
@@ -58,7 +117,8 @@ class PublicController < ApplicationController
             const body = {
               event: {
                 event_name: eventName,
-                properties: properties
+                properties: properties,
+                visitor_uuid: this.visitorUuid
               }
             };
 
