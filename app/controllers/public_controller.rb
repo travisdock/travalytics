@@ -71,7 +71,7 @@ class PublicController < ApplicationController
             // Generate new UUID with 2-week expiration
             const newUuid = this.generateUuid();
             const expirationTime = Date.now() + (14 * 24 * 60 * 60 * 1000); // 2 weeks
-      #{'      '}
+            
             try {
               localStorage.setItem(storageKey, JSON.stringify({
                 uuid: newUuid,
