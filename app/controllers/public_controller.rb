@@ -55,7 +55,7 @@ class PublicController < ApplicationController
           getOrCreateVisitorUuid() {
             const storageKey = `travalytics_visitor_${this.trackingId}`;
             const storedData = localStorage.getItem(storageKey);
-            
+      #{'      '}
             if (storedData) {
               try {
                 const data = JSON.parse(storedData);
@@ -71,7 +71,7 @@ class PublicController < ApplicationController
             // Generate new UUID with 2-week expiration
             const newUuid = this.generateUuid();
             const expirationTime = Date.now() + (14 * 24 * 60 * 60 * 1000); // 2 weeks
-            
+      #{'      '}
             try {
               localStorage.setItem(storageKey, JSON.stringify({
                 uuid: newUuid,
