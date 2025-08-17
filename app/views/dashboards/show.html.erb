@@ -32,6 +32,11 @@
           </div>
 
           <div class="stat-card">
+            <dt>Unique Visitors</dt>
+            <dd><%= number_with_delimiter(site_data[:unique_visitors]) %></dd>
+          </div>
+
+          <div class="stat-card">
             <dt>Bot Traffic</dt>
             <dd><%= number_with_delimiter(site_data[:bot_traffic]) %></dd>
           </div>

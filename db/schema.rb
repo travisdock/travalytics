@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_02_212335) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_15_012542) do
   create_table "events", force: :cascade do |t|
     t.integer "site_id", null: false
     t.string "event_name", null: false
@@ -24,10 +24,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_02_212335) do
     t.string "country"
     t.string "city"
     t.string "region"
+    t.string "visitor_uuid"
     t.index ["created_at"], name: "index_events_on_created_at"
     t.index ["event_name"], name: "index_events_on_event_name"
     t.index ["is_bot"], name: "index_events_on_is_bot"
     t.index ["site_id"], name: "index_events_on_site_id"
+    t.index ["visitor_uuid"], name: "index_events_on_visitor_uuid"
   end
 
   create_table "external_events", force: :cascade do |t|

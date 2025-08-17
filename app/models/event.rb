@@ -18,6 +18,20 @@ class Event < ApplicationRecord
   scope :humans_only, -> { where(is_bot: false) }
   scope :bots_only, -> { where(is_bot: true) }
 
+  # Unique visitor scopes
+  scope :with_visitor_uuid, -> { where.not(visitor_uuid: nil) }
+  scope :by_visitor_uuid, ->(uuid) { where(visitor_uuid: uuid) }
+
+  # Get unique visitors count for a given scope
+  def self.unique_visitors_count
+    with_visitor_uuid.distinct.count(:visitor_uuid)
+  end
+
+  # Get unique visitors for a date range
+  def self.unique_visitors_by_date_range(start_date, end_date)
+    by_date_range(start_date, end_date).with_visitor_uuid.distinct.pluck(:visitor_uuid)
+  end
+
   # Helper methods for extracting common properties
   def page_path
     properties&.dig("path")

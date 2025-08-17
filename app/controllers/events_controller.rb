@@ -8,7 +8,8 @@ class EventsController < ApplicationController
   def create
     event = EventTracker.new(request: request, site: @site).track(
       event_params[:event_name],
-      event_params[:properties] || {}
+      event_params[:properties] || {},
+      visitor_uuid: event_params[:visitor_uuid]
     )
 
     render json: { status: "success", event_id: event.id }
@@ -19,7 +20,7 @@ class EventsController < ApplicationController
   private
 
   def event_params
-    params.require(:event).permit(:event_name, properties: {})
+    params.require(:event).permit(:event_name, :visitor_uuid, properties: {})
   end
 
   def find_site_by_tracking_id

@@ -26,6 +26,12 @@
       </div>
       <div class="card">
         <div class="card-body">
+          <h3 class="stat-label" style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Unique Visitors</h3>
+          <p class="stat-value" style="font-size: 2rem; font-weight: bold; margin: 0;"><%= number_with_delimiter(@unique_visitors) %></p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
           <h3 class="stat-label" style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Countries</h3>
           <p class="stat-value" style="font-size: 2rem; font-weight: bold; margin: 0;"><%= @top_countries&.size || 0 %></p>
         </div>
