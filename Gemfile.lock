@@ -406,7 +406,7 @@ GEM
       faraday (~> 2.0)
       faraday-follow_redirects (~> 0.3)
       faraday-retry (~> 2.0)
-    ruby-openai (8.2.0)
+    ruby-openai (8.1.0)
       event_stream_parser (>= 0.3.0, < 2.0.0)
       faraday (>= 1)
       faraday-multipart (>= 1)
@@ -507,7 +507,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 8.0.2)
   rubocop-rails-omakase
-  ruby-openai
+  ruby-openai (~> 8.1.0)
   selenium-webdriver
   solid_cable
   solid_cache
