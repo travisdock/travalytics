@@ -44,7 +44,7 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
-    activeagent (0.5.0)
+    activeagent (0.5.1)
       actionpack (>= 7.2, < 9.0)
       actionview (>= 7.2, < 9.0)
       activejob (>= 7.2, < 9.0)
