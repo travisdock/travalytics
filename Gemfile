@@ -43,7 +43,7 @@ gem "maxmind-geoip2"
 
 # ActiveAgent for AI integration
 gem "activeagent"
-gem "ruby-openai", "~> 8.1.0" # constrain until activeagent fix is pushed
+gem "ruby-openai", "~> 8.3.0" # constrain until activeagent fix is pushed
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
