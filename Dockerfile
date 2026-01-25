@@ -1,4 +1,4 @@
-FROM ruby:3.4.5-slim-bookworm
+FROM ruby:4.0.1-slim-bookworm
 
 ENV APP_HOME="/app_home"
 ENV BUNDLE_PATH="${APP_HOME}/vendor/bundle"
@@ -21,7 +21,7 @@ RUN bash -c "set -o pipefail && apt-get update \
   && useradd --create-home --no-log-init -u \"${UID}\" -g \"${GID}\" ruby \
   && mkdir /node_modules && chown ruby:ruby -R /node_modules /app_home"
 
-EXPOSE 3000
+EXPOSE 3000 3036
 
 ENTRYPOINT ["./bin/dev-docker-entrypoint"]
-CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
+CMD ["./bin/dev"]

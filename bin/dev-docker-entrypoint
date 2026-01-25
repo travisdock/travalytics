@@ -8,8 +8,14 @@ else
   bundle install
 fi
 
+# Install npm dependencies for Vite/Inertia
+if [ -f "package.json" ]; then
+  echo "Installing npm dependencies..."
+  npm install --silent
+fi
+
 # If running the rails server then create or migrate existing database
-if [ "${*}" == "./bin/rails server" ]; then
+if [ "${*}" == "./bin/rails server" ] || [ "${*}" == "./bin/dev" ]; then
   ./bin/rails db:prepare
 fi
 

@@ -1,9 +1,15 @@
 class SitesController < ApplicationController
   before_action :require_authentication
   before_action :set_site, only: [ :show, :edit, :update, :destroy, :page_durations, :weekly_summary, :generate_weekly_summary ]
+  layout "inertia", only: [ :index ]
 
   def index
-    @sites = current_user.sites
+    sites = current_user.sites.select(:id, :name, :domain, :tracking_id, :created_at)
+
+    render inertia: "Sites/Index", props: {
+      sites: sites.as_json,
+      userTimezone: current_user.time_zone || "UTC"
+    }
   end
 
   def new

@@ -5,5 +5,8 @@ services:
       - .:/app_home
     ports:
       - "3000:3000"
+      - "3036:3036"
+    environment:
+      - VITE_RUBY_HOST=localhost
     stdin_open: true
     tty: true
