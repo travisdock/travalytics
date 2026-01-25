@@ -10,20 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_15_012542) do
+ActiveRecord::Schema[8.1].define(version: 2025_08_15_012542) do
   create_table "events", force: :cascade do |t|
-    t.integer "site_id", null: false
+    t.string "city"
+    t.string "country"
+    t.datetime "created_at", null: false
     t.string "event_name", null: false
-    t.json "properties"
-    t.string "page_url"
-    t.string "referrer"
-    t.string "user_agent"
     t.string "ip_address"
     t.boolean "is_bot", default: false
-    t.datetime "created_at", null: false
-    t.string "country"
-    t.string "city"
+    t.string "page_url"
+    t.json "properties"
+    t.string "referrer"
     t.string "region"
+    t.integer "site_id", null: false
+    t.string "user_agent"
     t.string "visitor_uuid"
     t.index ["created_at"], name: "index_events_on_created_at"
     t.index ["event_name"], name: "index_events_on_event_name"
@@ -33,55 +33,55 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_15_012542) do
   end
 
   create_table "external_events", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.string "event_type", null: false
-    t.string "title", null: false
+    t.datetime "created_at", null: false
     t.text "description"
     t.datetime "event_date", null: false
-    t.string "url"
+    t.string "event_type", null: false
     t.json "metadata"
-    t.datetime "created_at", null: false
+    t.string "title", null: false
     t.datetime "updated_at", null: false
+    t.string "url"
+    t.integer "user_id", null: false
     t.index ["event_date"], name: "index_external_events_on_event_date"
     t.index ["event_type"], name: "index_external_events_on_event_type"
     t.index ["user_id"], name: "index_external_events_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.string "ip_address"
-    t.string "user_agent"
     t.datetime "created_at", null: false
+    t.string "ip_address"
     t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.integer "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
   create_table "sites", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "domain", null: false
-    t.string "tracking_id", null: false
-    t.integer "user_id", null: false
     t.datetime "created_at", null: false
+    t.string "domain", null: false
+    t.string "name", null: false
+    t.string "tracking_id", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
     t.index ["domain"], name: "index_sites_on_domain", unique: true
     t.index ["tracking_id"], name: "index_sites_on_tracking_id", unique: true
     t.index ["user_id"], name: "index_sites_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
     t.string "email_address", null: false
     t.string "password_digest", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "time_zone", default: "UTC"
+    t.datetime "updated_at", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
   create_table "weekly_summaries", force: :cascade do |t|
-    t.integer "site_id", null: false
     t.text "content"
-    t.datetime "generated_at"
     t.datetime "created_at", null: false
+    t.datetime "generated_at"
+    t.integer "site_id", null: false
     t.datetime "updated_at", null: false
     t.index ["site_id"], name: "index_weekly_summaries_on_site_id"
   end

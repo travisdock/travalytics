@@ -21,7 +21,6 @@ RUN bash -c "set -o pipefail && apt-get update \
   && useradd --create-home --no-log-init -u \"${UID}\" -g \"${GID}\" ruby \
   && mkdir /node_modules && chown ruby:ruby -R /node_modules /app_home"
 
-RUN npm install -g @anthropic-ai/claude-code
 EXPOSE 3000
 
 ENTRYPOINT ["./bin/dev-docker-entrypoint"]
