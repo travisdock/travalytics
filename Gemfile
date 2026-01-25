@@ -15,6 +15,12 @@ gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
 
+# Inertia.js adapter for Rails [https://inertia-rails.dev]
+gem "inertia_rails"
+
+# Vite.js integration for Rails [https://vite-ruby.netlify.app]
+gem "vite_rails"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1"
 
