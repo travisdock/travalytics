@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.2"
+gem "rails", "~> 8.1.0"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
@@ -41,9 +41,9 @@ gem "rack-cors"
 # MaxMind GeoIP2 for IP geolocation
 gem "maxmind-geoip2"
 
-# ActiveAgent for AI integration
+# ActiveAgent for AI integration (requires openai gem for OpenRouter provider)
 gem "activeagent"
-gem "ruby-openai", "~> 8.1.0" # constrain until activeagent fix is pushed
+gem "openai", "~> 0.34"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
