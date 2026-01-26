@@ -1,38 +1,35 @@
-import { Controller } from "@hotwired/stimulus"
-import { Chart, registerables } from "chart.js"
-import annotationPlugin from "chartjs-plugin-annotation"
+import { useEffect, useRef } from 'react'
+import { Chart, registerables } from 'chart.js'
+import annotationPlugin from 'chartjs-plugin-annotation'
 
 Chart.register(...registerables)
 Chart.register(annotationPlugin)
 
-export default class extends Controller {
-  static values = { 
-    labels: Array,
-    data: Array,
-    externalEvents: Array
-  }
+export default function PageViewsChart({ labels, data, externalEvents = [] }) {
+  const canvasRef = useRef(null)
+  const chartRef = useRef(null)
 
-  connect() {
-    const ctx = this.element.getContext('2d')
-    
+  useEffect(() => {
+    if (!canvasRef.current) return
+
+    const ctx = canvasRef.current.getContext('2d')
+
     // Process external events for point annotations
     const annotations = {}
-    if (this.hasExternalEventsValue && this.externalEventsValue.length > 0) {
-      this.externalEventsValue.forEach((event, index) => {
-        const eventDateIndex = this.labelsValue.findIndex(label => {
-          // Parse the event date (comes as YYYY-MM-DD string)
+    if (externalEvents.length > 0) {
+      externalEvents.forEach((event, index) => {
+        const eventDateIndex = labels.findIndex(label => {
           const eventDate = new Date(event.date + 'T00:00:00')
           const eventLabel = eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
           return label === eventLabel
         })
-        
+
         if (eventDateIndex !== -1) {
-          // Find the y-value for this date
-          const yValue = this.dataValue[eventDateIndex] || 0
-          
+          const yValue = data[eventDateIndex] || 0
+
           annotations[`event${index}`] = {
             type: 'point',
-            xValue: this.labelsValue[eventDateIndex],
+            xValue: labels[eventDateIndex],
             yValue: yValue,
             backgroundColor: 'rgba(239, 68, 68, 0.8)',
             borderColor: 'rgba(239, 68, 68, 1)',
@@ -54,14 +51,14 @@ export default class extends Controller {
         }
       })
     }
-    
-    this.chart = new Chart(ctx, {
+
+    chartRef.current = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: this.labelsValue,
+        labels: labels,
         datasets: [{
           label: 'Page Views',
-          data: this.dataValue,
+          data: data,
           borderColor: 'rgb(75, 192, 192)',
           backgroundColor: 'rgba(75, 192, 192, 0.1)',
           tension: 0.1,
@@ -81,21 +78,14 @@ export default class extends Controller {
             callbacks: {
               afterBody: (context) => {
                 const index = context[0].dataIndex
-                const label = this.labelsValue[index]
-                
-                // Find external events for this date
-                const eventsForDate = []
-                if (this.hasExternalEventsValue && this.externalEventsValue.length > 0) {
-                  this.externalEventsValue.forEach(event => {
-                    const eventDate = new Date(event.date + 'T00:00:00')
-                    const eventLabel = eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                    
-                    if (label === eventLabel) {
-                      eventsForDate.push(event)
-                    }
-                  })
-                }
-                
+                const label = labels[index]
+
+                const eventsForDate = externalEvents.filter(event => {
+                  const eventDate = new Date(event.date + 'T00:00:00')
+                  const eventLabel = eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                  return label === eventLabel
+                })
+
                 if (eventsForDate.length > 0) {
                   const lines = ['', 'External Events:']
                   eventsForDate.forEach(event => {
@@ -103,7 +93,7 @@ export default class extends Controller {
                   })
                   return lines
                 }
-                
+
                 return []
               }
             }
@@ -130,11 +120,17 @@ export default class extends Controller {
         }
       }
     })
-  }
 
-  disconnect() {
-    if (this.chart) {
-      this.chart.destroy()
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.destroy()
+      }
     }
-  }
+  }, [labels, data, externalEvents])
+
+  return (
+    <div style={{ position: 'relative', height: '300px' }}>
+      <canvas ref={canvasRef}></canvas>
+    </div>
+  )
 }
