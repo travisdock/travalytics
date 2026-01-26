@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_08_15_012542) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_26_224958) do
   create_table "events", force: :cascade do |t|
     t.string "city"
     t.string "country"
@@ -18,9 +18,11 @@ ActiveRecord::Schema[8.1].define(version: 2025_08_15_012542) do
     t.string "event_name", null: false
     t.string "ip_address"
     t.boolean "is_bot", default: false
+    t.string "page_path"
     t.string "page_url"
     t.json "properties"
     t.string "referrer"
+    t.string "referrer_domain"
     t.string "region"
     t.integer "site_id", null: false
     t.string "user_agent"
@@ -28,6 +30,10 @@ ActiveRecord::Schema[8.1].define(version: 2025_08_15_012542) do
     t.index ["created_at"], name: "index_events_on_created_at"
     t.index ["event_name"], name: "index_events_on_event_name"
     t.index ["is_bot"], name: "index_events_on_is_bot"
+    t.index ["site_id", "created_at"], name: "index_events_on_site_id_and_created_at"
+    t.index ["site_id", "is_bot", "created_at"], name: "index_events_on_site_id_and_is_bot_and_created_at"
+    t.index ["site_id", "page_path"], name: "index_events_on_site_id_and_page_path"
+    t.index ["site_id", "referrer_domain"], name: "index_events_on_site_id_and_referrer_domain"
     t.index ["site_id"], name: "index_events_on_site_id"
     t.index ["visitor_uuid"], name: "index_events_on_visitor_uuid"
   end

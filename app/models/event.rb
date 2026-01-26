@@ -3,6 +3,8 @@ class Event < ApplicationRecord
 
   validates :event_name, presence: true
 
+  before_save :set_derived_fields
+
   scope :by_date_range, ->(start_date, end_date) { where(created_at: start_date..end_date) }
   scope :by_event_name, ->(name) { where(event_name: name) }
   scope :by_page_url, ->(url) { where(page_url: url) }
@@ -32,12 +34,31 @@ class Event < ApplicationRecord
     by_date_range(start_date, end_date).with_visitor_uuid.distinct.pluck(:visitor_uuid)
   end
 
-  # Helper methods for extracting common properties
-  def page_path
-    properties&.dig("path")
-  end
-
   def page_title
     properties&.dig("title")
+  end
+
+  private
+
+  def set_derived_fields
+    self.page_path ||= extract_page_path
+    self.referrer_domain ||= extract_referrer_domain
+  end
+
+  def extract_page_path
+    properties&.dig("path") || begin
+      uri = URI.parse(page_url.to_s)
+      uri.path.presence || "/"
+    rescue URI::InvalidURIError
+      "/"
+    end
+  end
+
+  def extract_referrer_domain
+    return nil if referrer.blank?
+    uri = URI.parse(referrer)
+    uri.host
+  rescue URI::InvalidURIError
+    nil
   end
 end
