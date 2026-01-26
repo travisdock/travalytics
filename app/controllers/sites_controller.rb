@@ -27,19 +27,20 @@ class SitesController < ApplicationController
   end
 
   def show
+    # Parse date range from params or default to last 10 days
+    end_date = params[:end_date].present? ? Date.parse(params[:end_date]).end_of_day : Date.current.end_of_day
+    start_date = params[:start_date].present? ? Date.parse(params[:start_date]).beginning_of_day : 9.days.ago.beginning_of_day
+
     events = @site.events
       .where(event_name: "page_view")
+      .where(created_at: start_date..end_date)
       .order(created_at: :desc)
       .limit(100)
 
-    # Statistics
-    total_events = @site.events.count
-    total_page_views = @site.events.page_views.count
-    unique_visitors = @site.events.page_views.unique_visitors_count
-
-    # Page views data for past 10 days
-    end_date = Date.current.end_of_day
-    start_date = 9.days.ago.beginning_of_day
+    # Statistics (scoped to date range)
+    total_events = @site.events.where(created_at: start_date..end_date).count
+    total_page_views = @site.events.page_views.where(created_at: start_date..end_date).count
+    unique_visitors = @site.events.page_views.where(created_at: start_date..end_date).unique_visitors_count
     page_views_by_day = @site.events
       .page_views
       .humans_only
@@ -61,10 +62,11 @@ class SitesController < ApplicationController
       .by_date_range(start_date, end_date)
       .order(event_date: :asc)
 
-    # Top paths (excluding bots)
+    # Top paths (excluding bots, scoped to date range)
     paths_hash = {}
     @site.events
       .where(is_bot: false)
+      .where(created_at: start_date..end_date)
       .where.not(page_url: nil)
       .pluck(:properties, :page_url)
       .each do |properties, page_url|
@@ -79,10 +81,11 @@ class SitesController < ApplicationController
       end
     top_paths = paths_hash.sort_by { |_, count| -count }.first(10)
 
-    # Top referrers (excluding bots and no referrer)
+    # Top referrers (excluding bots and no referrer, scoped to date range)
     referrers_hash = {}
     @site.events
       .where(is_bot: false)
+      .where(created_at: start_date..end_date)
       .where.not(referrer: [ nil, "" ])
       .pluck(:referrer)
       .each do |referrer|
@@ -97,9 +100,10 @@ class SitesController < ApplicationController
       end
     top_referrers = referrers_hash.sort_by { |_, count| -count }.first(10)
 
-    # Top countries (excluding bots)
+    # Top countries (excluding bots, scoped to date range)
     top_countries = @site.events
       .where(is_bot: false)
+      .where(created_at: start_date..end_date)
       .where.not(country: [ nil, "" ])
       .group(:country)
       .count
@@ -108,6 +112,8 @@ class SitesController < ApplicationController
 
     render inertia: "Sites/Show", props: {
       site: { id: @site.id, name: @site.name, domain: @site.domain },
+      startDate: start_date.to_date.to_s,
+      endDate: end_date.to_date.to_s,
       totalEvents: total_events,
       totalPageViews: total_page_views,
       uniqueVisitors: unique_visitors,

@@ -1,4 +1,5 @@
-import { usePage } from '@inertiajs/react'
+import { usePage, router } from '@inertiajs/react'
+import { useState } from 'react'
 import Layout from '../../components/Layout'
 import PageViewsChart from '../../components/PageViewsChart'
 import { formatDateTime } from '../../utils/formatters'
@@ -6,6 +7,8 @@ import { formatDateTime } from '../../utils/formatters'
 function SitesShow() {
   const {
     site,
+    startDate,
+    endDate,
     totalEvents,
     totalPageViews,
     uniqueVisitors,
@@ -18,6 +21,24 @@ function SitesShow() {
     events,
     userTimezone
   } = usePage().props
+
+  const [customStartDate, setCustomStartDate] = useState(startDate)
+  const [customEndDate, setCustomEndDate] = useState(endDate)
+
+  const applyDateRange = (start, end) => {
+    router.get(`/sites/${site.id}`, { start_date: start, end_date: end }, { preserveState: true })
+  }
+
+  const applyPreset = (days) => {
+    const end = new Date()
+    const start = new Date()
+    start.setDate(start.getDate() - days + 1)
+    applyDateRange(start.toISOString().split('T')[0], end.toISOString().split('T')[0])
+  }
+
+  const applyCustomRange = () => {
+    applyDateRange(customStartDate, customEndDate)
+  }
 
   const formatNumber = (num) => {
     return new Intl.NumberFormat().format(num)
@@ -64,6 +85,54 @@ function SitesShow() {
         </div>
       </div>
 
+      {/* Date filters */}
+      <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-4 mb-8">
+        <div className="flex flex-wrap items-center gap-4">
+          <span className="text-sm font-medium text-gray-700">Date Range:</span>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => applyPreset(7)}
+              className="px-3 py-1.5 text-sm rounded-md border border-gray-300 hover:bg-gray-50"
+            >
+              Last 7 days
+            </button>
+            <button
+              onClick={() => applyPreset(30)}
+              className="px-3 py-1.5 text-sm rounded-md border border-gray-300 hover:bg-gray-50"
+            >
+              Last 30 days
+            </button>
+            <button
+              onClick={() => applyPreset(90)}
+              className="px-3 py-1.5 text-sm rounded-md border border-gray-300 hover:bg-gray-50"
+            >
+              Last 90 days
+            </button>
+          </div>
+          <div className="flex items-center gap-2 ml-auto">
+            <input
+              type="date"
+              value={customStartDate}
+              onChange={(e) => setCustomStartDate(e.target.value)}
+              className="px-2 py-1.5 text-sm border border-gray-300 rounded-md"
+            />
+            <span className="text-gray-500">to</span>
+            <input
+              type="date"
+              value={customEndDate}
+              onChange={(e) => setCustomEndDate(e.target.value)}
+              className="px-2 py-1.5 text-sm border border-gray-300 rounded-md"
+            />
+            <button
+              onClick={applyCustomRange}
+              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Stats overview */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-4">
@@ -86,7 +155,9 @@ function SitesShow() {
 
       {/* Chart section */}
       <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-6 mb-8">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Page Views - Last 10 Days</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">
+          Page Views ({new Date(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - {new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })})
+        </h3>
 
         {externalEvents.length > 0 && (
           <div className="mb-4 p-3 bg-gray-50 rounded-md">
