@@ -73,22 +73,27 @@ class SitesController < ApplicationController
       .count
       .to_a
 
-    # Top referrers (excluding bots, scoped to date range) - SQL grouping for performance
+    # Top referrers (excluding bots and self-referrals, scoped to date range) - SQL grouping for performance
+    # Exclude both "domain.com" and "www.domain.com" variants
+    site_domain = @site.domain.sub(/^www\./, "")
+    excluded_domains = [ nil, "", site_domain, "www.#{site_domain}" ]
     top_referrers = @site.events
       .where(is_bot: false)
       .where(created_at: start_date..end_date)
-      .where.not(referrer_domain: [ nil, "" ])
+      .where.not(referrer_domain: excluded_domains)
       .group(:referrer_domain)
       .order("count_all DESC")
       .limit(10)
       .count
       .to_a
 
-    # Top countries (excluding bots, scoped to date range)
+    # Top countries (excluding bots and self-referrals, scoped to date range)
+    # Only counts "entry" visits from external sources
     top_countries = @site.events
       .where(is_bot: false)
       .where(created_at: start_date..end_date)
       .where.not(country: [ nil, "" ])
+      .where.not(referrer_domain: excluded_domains)
       .group(:country)
       .count
       .sort_by { |_, count| -count }
