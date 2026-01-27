@@ -62,43 +62,27 @@ class SitesController < ApplicationController
       .by_date_range(start_date, end_date)
       .order(event_date: :asc)
 
-    # Top paths (excluding bots, scoped to date range)
-    paths_hash = {}
-    @site.events
+    # Top paths (excluding bots, scoped to date range) - SQL grouping for performance
+    top_paths = @site.events
       .where(is_bot: false)
       .where(created_at: start_date..end_date)
-      .where.not(page_url: nil)
-      .pluck(:properties, :page_url)
-      .each do |properties, page_url|
-        path = properties&.dig("path") || begin
-          uri = URI.parse(page_url)
-          uri.path.presence || "/"
-        rescue URI::InvalidURIError => e
-          Rails.logger.warn "Invalid URL in event: #{page_url} - #{e.message}"
-          "[Invalid URL: #{page_url}]"
-        end
-        paths_hash[path] = (paths_hash[path] || 0) + 1
-      end
-    top_paths = paths_hash.sort_by { |_, count| -count }.first(10)
+      .where.not(page_path: nil)
+      .group(:page_path)
+      .order("count_all DESC")
+      .limit(10)
+      .count
+      .to_a
 
-    # Top referrers (excluding bots and no referrer, scoped to date range)
-    referrers_hash = {}
-    @site.events
+    # Top referrers (excluding bots, scoped to date range) - SQL grouping for performance
+    top_referrers = @site.events
       .where(is_bot: false)
       .where(created_at: start_date..end_date)
-      .where.not(referrer: [ nil, "" ])
-      .pluck(:referrer)
-      .each do |referrer|
-        domain = begin
-          uri = URI.parse(referrer)
-          uri.host || referrer
-        rescue URI::InvalidURIError => e
-          Rails.logger.warn "Invalid referrer URL: #{referrer} - #{e.message}"
-          referrer
-        end
-        referrers_hash[domain] = (referrers_hash[domain] || 0) + 1
-      end
-    top_referrers = referrers_hash.sort_by { |_, count| -count }.first(10)
+      .where.not(referrer_domain: [ nil, "" ])
+      .group(:referrer_domain)
+      .order("count_all DESC")
+      .limit(10)
+      .count
+      .to_a
 
     # Top countries (excluding bots, scoped to date range)
     top_countries = @site.events
