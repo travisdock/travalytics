@@ -124,7 +124,7 @@ class SitesController < ApplicationController
       topReferrers: top_referrers,
       topCountries: top_countries,
       events: events.map { |e|
-        path = e.page_path || (URI.parse(e.page_url).path rescue nil)
+        path = e.page_path
         location_parts = [ e.city, e.region, e.country ].compact
         {
           id: e.id,
