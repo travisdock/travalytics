@@ -4,10 +4,10 @@ class AddPerformanceFieldsToEvents < ActiveRecord::Migration[8.1]
     add_column :events, :referrer_domain, :string
 
     # Composite indexes for common query patterns
-    add_index :events, [:site_id, :created_at]
-    add_index :events, [:site_id, :is_bot, :created_at]
-    add_index :events, [:site_id, :page_path]
-    add_index :events, [:site_id, :referrer_domain]
+    add_index :events, [ :site_id, :created_at ]
+    add_index :events, [ :site_id, :is_bot, :created_at ]
+    add_index :events, [ :site_id, :page_path ]
+    add_index :events, [ :site_id, :referrer_domain ]
 
     # Backfill existing records
     reversible do |dir|
