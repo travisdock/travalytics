@@ -46,7 +46,11 @@ function SitesShow() {
     const end = new Date()
     const start = new Date()
     start.setDate(start.getDate() - days + 1)
-    applyDateRange(start.toISOString().split('T')[0], end.toISOString().split('T')[0])
+    const startStr = start.toISOString().split('T')[0]
+    const endStr = end.toISOString().split('T')[0]
+    setCustomStartDate(startStr)
+    setCustomEndDate(endStr)
+    applyDateRange(startStr, endStr)
   }
 
   const applyCustomRange = () => {
