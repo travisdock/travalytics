@@ -1,5 +1,5 @@
 import { usePage, router } from '@inertiajs/react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Layout from '../../components/Layout'
 import PageViewsChart from '../../components/PageViewsChart'
 import { formatDateTime } from '../../utils/formatters'
@@ -24,6 +24,19 @@ function SitesShow() {
 
   const [customStartDate, setCustomStartDate] = useState(startDate)
   const [customEndDate, setCustomEndDate] = useState(endDate)
+  const [expandedEvents, setExpandedEvents] = useState(new Set())
+
+  const toggleEventExpanded = (eventId) => {
+    setExpandedEvents(prev => {
+      const next = new Set(prev)
+      if (next.has(eventId)) {
+        next.delete(eventId)
+      } else {
+        next.add(eventId)
+      }
+      return next
+    })
+  }
 
   const applyDateRange = (start, end) => {
     router.get(`/sites/${site.id}`, { start_date: start, end_date: end }, { preserveState: true })
@@ -33,7 +46,11 @@ function SitesShow() {
     const end = new Date()
     const start = new Date()
     start.setDate(start.getDate() - days + 1)
-    applyDateRange(start.toISOString().split('T')[0], end.toISOString().split('T')[0])
+    const startStr = start.toISOString().split('T')[0]
+    const endStr = end.toISOString().split('T')[0]
+    setCustomStartDate(startStr)
+    setCustomEndDate(endStr)
+    applyDateRange(startStr, endStr)
   }
 
   const applyCustomRange = () => {
@@ -279,38 +296,53 @@ function SitesShow() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {events.map((event) => (
-                    <tr key={event.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 text-sm text-gray-900">
-                        {event.event_name.replace(/_/g, ' ')}
-                        {event.is_bot && <span className="ml-1">🤖</span>}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate" title={event.path}>
-                        {event.path || '-'}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate" title={event.location}>
-                        {event.location || '-'}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate" title={event.referrer}>
-                        {event.referrer || 'No Referer'}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-600">
-                        {event.properties && Object.keys(event.properties).length > 0 ? (
-                          <details>
-                            <summary className="cursor-pointer text-blue-600 hover:text-blue-800">View</summary>
-                            <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto max-w-xs">
-                              {JSON.stringify(event.properties, null, 2)}
-                            </pre>
-                          </details>
-                        ) : (
-                          '-'
+                  {events.map((event) => {
+                    const isExpanded = expandedEvents.has(event.id)
+                    const hasProperties = event.properties && Object.keys(event.properties).length > 0
+                    return (
+                      <React.Fragment key={event.id}>
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm text-gray-900">
+                            {event.event_name.replace(/_/g, ' ')}
+                            {event.is_bot && <span className="ml-1">🤖</span>}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate" title={event.path}>
+                            {event.path || '-'}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate" title={event.location}>
+                            {event.location || '-'}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate" title={event.referrer}>
+                            {event.referrer || 'No Referer'}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600">
+                            {hasProperties ? (
+                              <button
+                                onClick={() => toggleEventExpanded(event.id)}
+                                className="text-blue-600 hover:text-blue-800"
+                              >
+                                {isExpanded ? '▼ Hide' : '▶ View'}
+                              </button>
+                            ) : (
+                              '-'
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">
+                            {formatDateTime(event.created_at, userTimezone)}
+                          </td>
+                        </tr>
+                        {isExpanded && hasProperties && (
+                          <tr className="bg-gray-50">
+                            <td colSpan={6} className="px-4 py-3">
+                              <pre className="p-3 bg-gray-100 rounded text-xs whitespace-pre-wrap break-all">
+                                {JSON.stringify(event.properties, null, 2)}
+                              </pre>
+                            </td>
+                          </tr>
                         )}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">
-                        {formatDateTime(event.created_at, userTimezone)}
-                      </td>
-                    </tr>
-                  ))}
+                      </React.Fragment>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
