@@ -20,7 +20,10 @@ export default function PageViewsChart({ labels, data, externalEvents = [] }) {
       externalEvents.forEach((event, index) => {
         const eventDateIndex = labels.findIndex(label => {
           const eventDate = new Date(event.date + 'T00:00:00')
-          const eventLabel = eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+          // Format with leading zero to match Ruby's strftime("%b %d")
+          const month = eventDate.toLocaleDateString('en-US', { month: 'short' })
+          const day = String(eventDate.getDate()).padStart(2, '0')
+          const eventLabel = `${month} ${day}`
           return label === eventLabel
         })
 
@@ -82,7 +85,10 @@ export default function PageViewsChart({ labels, data, externalEvents = [] }) {
 
                 const eventsForDate = externalEvents.filter(event => {
                   const eventDate = new Date(event.date + 'T00:00:00')
-                  const eventLabel = eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                  // Format with leading zero to match Ruby's strftime("%b %d")
+                  const month = eventDate.toLocaleDateString('en-US', { month: 'short' })
+                  const day = String(eventDate.getDate()).padStart(2, '0')
+                  const eventLabel = `${month} ${day}`
                   return label === eventLabel
                 })
 
