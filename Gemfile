@@ -47,10 +47,6 @@ gem "rack-cors"
 # MaxMind GeoIP2 for IP geolocation
 gem "maxmind-geoip2"
 
-# ActiveAgent for AI integration (requires openai gem for OpenRouter provider)
-gem "activeagent"
-gem "openai", "~> 0.34"
-
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

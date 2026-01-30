@@ -1,6 +1,6 @@
 class SitesController < ApplicationController
   before_action :require_authentication
-  before_action :set_site, only: [ :show, :edit, :update, :destroy, :page_durations, :weekly_summary, :generate_weekly_summary ]
+  before_action :set_site, only: [ :show, :edit, :update, :destroy, :page_durations ]
   layout "inertia", only: [ :index, :show ]
 
   def index
@@ -194,21 +194,6 @@ class SitesController < ApplicationController
   def destroy
     @site.destroy
     redirect_to sites_path, notice: "Site deleted successfully"
-  end
-
-  def weekly_summary
-    @weekly_summaries = @site.weekly_summaries.recent.limit(10)
-    @latest_summary = @site.latest_weekly_summary
-  end
-
-  def generate_weekly_summary
-    begin
-      @site.create_weekly_summary
-      redirect_to weekly_summary_site_path(@site), notice: "Weekly summary generated successfully"
-    rescue => e
-      Rails.logger.error "Failed to generate weekly summary: #{e.message}"
-      redirect_to weekly_summary_site_path(@site), alert: "Failed to generate weekly summary. Please try again."
-    end
   end
 
   private
