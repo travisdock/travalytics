@@ -76,12 +76,6 @@ function SitesShow() {
         </div>
         <div className="flex flex-wrap gap-2">
           <a
-            href={`/sites/${site.id}/weekly_summary`}
-            className="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200"
-          >
-            Weekly Summary
-          </a>
-          <a
             href={`/sites/${site.id}/page_durations`}
             className="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200"
           >

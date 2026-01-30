@@ -12,8 +12,6 @@ Rails.application.routes.draw do
   resources :sites do
     member do
       get :page_durations
-      get :weekly_summary
-      post :generate_weekly_summary
     end
   end
 

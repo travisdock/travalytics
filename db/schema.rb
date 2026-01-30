@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_26_224958) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_30_010435) do
   create_table "events", force: :cascade do |t|
     t.string "city"
     t.string "country"
@@ -83,18 +83,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_26_224958) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
-  create_table "weekly_summaries", force: :cascade do |t|
-    t.text "content"
-    t.datetime "created_at", null: false
-    t.datetime "generated_at"
-    t.integer "site_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["site_id"], name: "index_weekly_summaries_on_site_id"
-  end
-
   add_foreign_key "events", "sites"
   add_foreign_key "external_events", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "sites", "users"
-  add_foreign_key "weekly_summaries", "sites"
 end
