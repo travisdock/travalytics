@@ -27,9 +27,21 @@ class SitesController < ApplicationController
   end
 
   def show
-    # Parse date range from params or default to last 10 days
-    end_date = params[:end_date].present? ? Date.parse(params[:end_date]).end_of_day : Date.current.end_of_day
-    start_date = params[:start_date].present? ? Date.parse(params[:start_date]).beginning_of_day : 9.days.ago.beginning_of_day
+    # Use the user's timezone for date calculations
+    user_tz = ActiveSupport::TimeZone[current_user.time_zone || "UTC"] || ActiveSupport::TimeZone["UTC"]
+    utc_offset = Time.current.in_time_zone(user_tz).utc_offset
+
+    # Parse date range in user's timezone
+    end_date = if params[:end_date].present?
+      user_tz.parse(params[:end_date]).end_of_day
+    else
+      Time.current.in_time_zone(user_tz).end_of_day
+    end
+    start_date = if params[:start_date].present?
+      user_tz.parse(params[:start_date]).beginning_of_day
+    else
+      (Time.current.in_time_zone(user_tz) - 9.days).beginning_of_day
+    end
 
     events = @site.events
       .where(event_name: "page_view")
@@ -45,7 +57,7 @@ class SitesController < ApplicationController
       .page_views
       .humans_only
       .where(created_at: start_date..end_date)
-      .group("DATE(created_at)")
+      .group(Arel.sql("DATE(created_at, '#{format('%+d', utc_offset)} seconds')"))
       .count
       .transform_keys { |k| k.to_date }
 
